@@ -1,0 +1,1837 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Work Lab Atelier — Know it. Find it. Act when it counts.</title>
+<meta name="description" content="Work Lab Atelier — a knowledge-first, action-ready studio for architects. Capture, organise, distil and act on what you know. On-prem: your notes live in a folder you own.">
+<meta name="theme-color" content="#141619">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Atelier">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:ital,wght@0,300;0,400;0,450;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme:light;
+    --paper:#F4F5F2; --surface:#FFFFFF; --surface-2:#FAFAF8;
+    --ink:#1C1E22; --ink-soft:#5B6168; --ink-faint:#80868F;
+    --line:#E4E4DE; --line-strong:#D4D4CC;
+    --accent:#2C4A66; --accent-ink:#223B52; --accent-soft:rgba(44,74,102,.08); --accent-line:rgba(44,74,102,.28);
+    --c-inbox:#7A5C8E; --c-project:#2C4A66; --c-area:#4F6B57; --c-resource:#9A7B3F; --c-archive:#767C84;
+    --n-resolve:#A13F36; --n-decide:#2C4A66; --n-explore:#8C6E2F; --n-keep:#767C84;
+    --danger:#9A3B34; --ok:#3F6B4C;
+    --radius:9px; --radius-s:6px;
+    --shadow:0 1px 2px rgba(28,30,34,.04), 0 8px 24px rgba(28,30,34,.06);
+    --maxw:1220px;
+    --sans:"Inter",system-ui,-apple-system,sans-serif;
+    --serif:"Fraunces",Georgia,serif;
+    --on-accent:#FFFFFF;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      color-scheme:dark;
+      --paper:#141619; --surface:#1A1D21; --surface-2:#1E2126;
+      --ink:#E9EAEB; --ink-soft:#A1A7AF; --ink-faint:#7C828A;
+      --line:#2A2E34; --line-strong:#353A41;
+      --accent:#86ABD0; --accent-ink:#A6C4E2; --accent-soft:rgba(134,171,208,.12); --accent-line:rgba(134,171,208,.34);
+      --c-inbox:#B596C9; --c-project:#86ABD0; --c-area:#7FA98A; --c-resource:#C7A869; --c-archive:#8A9099;
+      --n-resolve:#E08A80; --n-decide:#86ABD0; --n-explore:#C7A869; --n-keep:#8A9099;
+      --danger:#D98078; --ok:#7FA98A;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+      --on-accent:#101418;
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme:dark;
+    --paper:#141619; --surface:#1A1D21; --surface-2:#1E2126;
+    --ink:#E9EAEB; --ink-soft:#A1A7AF; --ink-faint:#7C828A;
+    --line:#2A2E34; --line-strong:#353A41;
+    --accent:#86ABD0; --accent-ink:#A6C4E2; --accent-soft:rgba(134,171,208,.12); --accent-line:rgba(134,171,208,.34);
+    --c-inbox:#B596C9; --c-project:#86ABD0; --c-area:#7FA98A; --c-resource:#C7A869; --c-archive:#8A9099;
+    --n-resolve:#E08A80; --n-decide:#86ABD0; --n-explore:#C7A869; --n-keep:#8A9099;
+    --danger:#D98078; --ok:#7FA98A;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+    --on-accent:#101418;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility}
+  button,input,select,textarea{font-family:inherit; font-size:inherit; color:inherit}
+  a{color:var(--accent-ink)}
+  ::selection{background:var(--accent-soft)}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+  body::before{content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.5;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:34px 34px; mask-image:radial-gradient(circle at 30% 0%,#000,transparent 75%); -webkit-mask-image:radial-gradient(circle at 30% 0%,#000,transparent 75%)}
+  .wrap{position:relative; z-index:1; max-width:var(--maxw); margin:0 auto; padding:0 24px}
+  @media (max-width:760px){ .wrap{padding-left:max(16px,env(safe-area-inset-left,0px)); padding-right:max(16px,env(safe-area-inset-right,0px))} }
+  [hidden]{display:none !important}
+
+  /* top bar */
+  header.top{position:sticky; top:0; z-index:40; background:color-mix(in srgb,var(--paper) 88%,transparent); backdrop-filter:blur(10px); border-bottom:1px solid var(--line)}
+  .top-inner{display:flex; align-items:center; gap:14px; height:64px}
+  header.top{padding-top:env(safe-area-inset-top,0px)}
+  .wrap{padding-left:max(24px,env(safe-area-inset-left,0px)); padding-right:max(24px,env(safe-area-inset-right,0px))}
+  .toast{bottom:calc(22px + env(safe-area-inset-bottom,0px))}
+  .steps{margin:0; padding-left:20px; color:var(--ink-soft); font-size:14px; line-height:1.6}
+  .steps li{margin-bottom:6px}
+  .steps li::before{display:none}
+  .brand{display:flex; align-items:baseline; gap:10px; flex:0 0 auto; cursor:pointer; background:none; border:0; padding:0}
+  .brand .mark{font-family:var(--serif); font-weight:500; font-size:25px; letter-spacing:.3px; color:var(--ink)}
+  .brand .dot{width:7px; height:7px; border-radius:50%; background:var(--accent); display:inline-block; transform:translateY(-3px); margin-left:1px}
+  .brand .tag{font-size:12.5px; color:var(--ink-faint)}
+  .brand .wl{font-weight:400; color:var(--ink-soft)}
+  @media (max-width:980px){ .brand .tag{display:none} }
+  @media (max-width:760px){ .brand .wl{display:none} }
+  .search{position:relative; flex:1 1 auto; max-width:440px}
+  .search input{width:100%; height:40px; padding:0 40px 0 38px; border-radius:var(--radius); border:1px solid var(--line-strong); background:var(--surface); font-size:14.5px}
+  .search input:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+  .search svg{position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--ink-faint)}
+  .search kbd{position:absolute; right:10px; top:50%; transform:translateY(-50%); font-family:var(--sans); font-size:11px; color:var(--ink-faint); border:1px solid var(--line); border-radius:4px; padding:1px 6px; background:var(--surface-2)}
+  @media (max-width:760px){ .search kbd{display:none} .search input{padding-right:12px} }
+  .top-actions{display:flex; align-items:center; gap:6px; flex:0 0 auto; margin-left:auto}
+  .btn{display:inline-flex; align-items:center; gap:7px; height:40px; padding:0 14px; border-radius:var(--radius); border:1px solid var(--line-strong); background:var(--surface); color:var(--ink); font-size:14px; font-weight:500; cursor:pointer; transition:border-color .12s,background .12s; white-space:nowrap}
+  .btn:hover{border-color:var(--accent-line)}
+  .btn.primary{background:var(--accent); border-color:var(--accent); color:var(--on-accent)}
+  .btn.primary:hover{background:var(--accent-ink); border-color:var(--accent-ink)}
+  .btn.sm{height:32px; padding:0 11px; font-size:13px}
+  .btn.icon{width:40px; padding:0; justify-content:center}
+  .btn.ghost{border-color:transparent; background:transparent}
+  .btn.ghost:hover{background:var(--surface-2); border-color:var(--line)}
+  .btn.danger{color:var(--danger)}
+  .btn:disabled{opacity:.5; cursor:not-allowed}
+  .btn .plus{font-size:17px; line-height:1}
+  @media (max-width:760px){ .btn.primary .label{display:none} #capture-btn{width:40px; padding:0; justify-content:center} }
+  .menu{position:relative}
+  .menu-pop{position:absolute; right:0; top:46px; width:270px; background:var(--surface); border:1px solid var(--line-strong); border-radius:var(--radius); box-shadow:var(--shadow); padding:6px; display:none; z-index:50}
+  .menu-pop.open{display:block}
+  .menu-pop button{display:flex; align-items:center; gap:10px; width:100%; text-align:left; padding:9px 10px; border:0; background:transparent; border-radius:var(--radius-s); font-size:14px; cursor:pointer}
+  .menu-pop button:hover{background:var(--surface-2)}
+  .menu-pop .sep{height:1px; background:var(--line); margin:5px 2px}
+  .menu-pop .badge{margin-left:auto; font-size:11px; color:var(--ink-faint)}
+  #nav-toggle{display:none}
+  @media (max-width:860px){ #nav-toggle{display:inline-flex} }
+
+  /* banner */
+  .banner{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin:16px 0 0; padding:11px 14px; border:1px solid var(--accent-line); background:var(--accent-soft); border-radius:var(--radius); font-size:13.5px; color:var(--ink-soft)}
+  .banner strong{color:var(--ink)}
+  .banner .btn{margin-left:auto}
+
+  /* layout */
+  .layout{display:grid; grid-template-columns:232px 1fr; gap:32px; padding-top:22px; padding-bottom:90px; align-items:start}
+  @media (max-width:860px){ .layout{grid-template-columns:1fr; gap:16px} }
+  aside{position:sticky; top:86px}
+  @media (max-width:860px){
+    aside{position:fixed; top:0; left:0; bottom:0; width:280px; z-index:70; background:var(--surface); border-right:1px solid var(--line-strong); padding:20px 14px; overflow:auto; transform:translateX(-102%); transition:transform .18s ease; box-shadow:var(--shadow)}
+    aside.open{transform:none}
+  }
+  .nav-group{margin-bottom:20px}
+  .nav-title{font-size:12px; font-weight:600; color:var(--ink-faint); margin:0 8px 6px}
+  .nav-item{display:flex; align-items:center; gap:10px; width:100%; text-align:left; border:0; background:transparent; padding:7px 10px; border-radius:var(--radius-s); cursor:pointer; font-size:14.5px}
+  .nav-item:hover{background:var(--surface-2)}
+  .nav-item.active{background:var(--accent-soft); color:var(--accent-ink); font-weight:500}
+  .nav-item .swatch{width:9px; height:9px; border-radius:2.5px; flex:0 0 auto}
+  .nav-item svg{flex:0 0 auto; color:var(--ink-faint)}
+  .nav-item .count{margin-left:auto; font-size:12px; color:var(--ink-faint); font-variant-numeric:tabular-nums}
+  .nav-item .count.hot{color:var(--on-accent); background:var(--c-inbox); border-radius:20px; padding:0 7px; font-weight:600}
+  .nav-item.sub{padding-left:28px; font-size:13.5px}
+  .tags-wrap{display:flex; flex-wrap:wrap; gap:6px; padding:0 6px}
+  .tag-chip{font-size:12.5px; color:var(--ink-soft); background:var(--surface-2); border:1px solid var(--line); padding:3px 9px; border-radius:20px; cursor:pointer}
+  .tag-chip:hover{border-color:var(--accent-line); color:var(--accent-ink)}
+  .tag-chip.active{background:var(--accent); border-color:var(--accent); color:var(--on-accent)}
+  .side-foot{margin-top:20px; padding:12px 8px 0; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); line-height:1.7}
+  .side-foot .wla{letter-spacing:1.5px; font-weight:600; color:var(--ink-soft)}
+  .store-pill{display:flex; align-items:center; gap:7px; width:100%; text-align:left; border:1px solid var(--line); background:var(--surface-2); border-radius:var(--radius-s); padding:7px 9px; font-size:12.5px; color:var(--ink-soft); cursor:pointer; margin-bottom:10px}
+  .store-pill .led{width:8px; height:8px; border-radius:50%; background:var(--ok); flex:0 0 auto}
+  .store-pill.browser .led{background:var(--n-explore)}
+  .scrim-nav{position:fixed; inset:0; background:rgba(20,22,26,.4); z-index:65; display:none}
+  .scrim-nav.open{display:block}
+
+  /* main */
+  .main-head{display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap}
+  .view-title{font-family:var(--serif); font-size:28px; font-weight:500; margin:0; line-height:1.15}
+  .view-hint{font-size:13.5px; color:var(--ink-faint); margin:4px 0 0; font-style:italic; font-weight:300}
+  .main-tools{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+  select.sel, .field select{height:36px; border:1px solid var(--line-strong); background:var(--surface); border-radius:var(--radius-s); font-size:13.5px; padding:0 8px; cursor:pointer}
+  .count-line{font-size:12.5px; color:var(--ink-faint); margin:14px 2px 10px; font-variant-numeric:tabular-nums}
+
+  /* quick capture */
+  .quick{display:grid; grid-template-columns:repeat(7,1fr); gap:8px; margin:18px 0 6px}
+  .quick button{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; padding:12px 6px; min-height:74px; border:1px solid var(--line); background:var(--surface); border-radius:var(--radius); cursor:pointer; font-size:12.5px; font-weight:500; color:var(--ink-soft)}
+  .quick button:hover{border-color:var(--accent-line); color:var(--accent-ink)}
+  .quick button svg{color:var(--accent)}
+  .quick button.rec svg{color:var(--danger)}
+  @media (max-width:760px){ .quick{grid-template-columns:repeat(4,1fr)} .quick button{min-height:70px} }
+
+  /* dashboard */
+  .dash{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:12px}
+  @media (max-width:760px){ .dash{grid-template-columns:1fr} }
+  .panel{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:14px 16px 12px; min-width:0}
+  .panel.wide{grid-column:1 / -1}
+  .panel.hot{border-color:color-mix(in srgb,var(--n-resolve) 45%,var(--line))}
+  .panel.inbox{border-color:color-mix(in srgb,var(--c-inbox) 45%,var(--line))}
+  .panel-head{display:flex; align-items:center; gap:10px; margin-bottom:8px}
+  .panel-head h3{margin:0; font-size:14.5px; font-weight:600}
+  .panel-head .n{font-size:12.5px; color:var(--ink-faint); font-variant-numeric:tabular-nums}
+  .panel-head .btn{margin-left:auto}
+  .panel p.sub{margin:0 0 8px; font-size:13px; color:var(--ink-faint); font-style:italic; font-weight:300}
+  .big-n{font-family:var(--serif); font-size:34px; line-height:1; font-weight:500; margin-right:4px}
+  .rows{display:flex; flex-direction:column}
+  .row{display:flex; align-items:center; gap:10px; padding:7px 0; border-top:1px solid var(--line); font-size:13.5px; cursor:pointer; min-width:0}
+  .row:first-child{border-top:0}
+  .row:hover .row-title{color:var(--accent-ink); text-decoration:underline; text-underline-offset:2px}
+  .row-title{flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .row .meta{flex:0 0 auto; font-size:12px; color:var(--ink-faint); white-space:nowrap}
+  .row .meta.late{color:var(--n-resolve); font-weight:600}
+  .row input[type=checkbox]{flex:0 0 auto; width:16px; height:16px; accent-color:var(--accent); cursor:pointer}
+  .empty-line{font-size:13px; color:var(--ink-faint); padding:4px 0 2px}
+  .teaser{display:flex; gap:14px; align-items:flex-start; background:linear-gradient(0deg,var(--surface),var(--surface)); }
+  .teaser .lead{font-family:var(--serif); font-size:17px; margin:0 0 4px; font-weight:500}
+  .teaser p{margin:0; font-size:13.5px; color:var(--ink-soft)}
+  .soon{display:inline-block; font-size:11px; font-weight:600; color:var(--accent-ink); border:1px solid var(--accent-line); border-radius:20px; padding:1px 8px; margin-bottom:6px}
+  .prep{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+
+  /* cards */
+  .cards{display:flex; flex-direction:column; gap:9px}
+  .card{position:relative; display:flex; gap:13px; background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--bucket,var(--line-strong)); border-radius:var(--radius); padding:13px 15px 12px; cursor:pointer; transition:border-color .12s, box-shadow .12s}
+  .card:hover{border-color:var(--line-strong); box-shadow:var(--shadow)}
+  .card .thumb{flex:0 0 auto; width:64px; height:64px; border-radius:6px; background:var(--surface-2); border:1px solid var(--line); overflow:hidden; display:flex; align-items:center; justify-content:center; color:var(--ink-faint)}
+  .card .thumb img{width:100%; height:100%; object-fit:cover; display:block}
+  .card-body{flex:1 1 auto; min-width:0}
+  .card-top{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:3px}
+  .card-title{font-size:15.5px; font-weight:600; margin:0; line-height:1.3; word-break:break-word}
+  .chip{font-size:11px; font-weight:500; padding:1px 8px; border-radius:20px; border:1px solid var(--line-strong); color:var(--ink-soft); white-space:nowrap}
+  .chip.para{border-color:var(--bucket); color:var(--bucket)}
+  .chip.n-resolve{border-color:var(--n-resolve); color:var(--n-resolve)}
+  .chip.n-decide{border-color:var(--n-decide); color:var(--n-decide)}
+  .chip.n-explore{border-color:var(--n-explore); color:var(--n-explore)}
+  .chip.n-keep{border-color:var(--n-keep); color:var(--n-keep)}
+  .chip.done{border-color:var(--ok); color:var(--ok)}
+  .chip.src{border-style:dashed}
+  .chip.late{background:var(--n-resolve); border-color:var(--n-resolve); color:#fff}
+  .card-snip{font-size:13.5px; color:var(--ink-soft); margin:0; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
+  .card-meta{display:flex; align-items:center; gap:10px; margin-top:7px; flex-wrap:wrap; font-size:11.5px; color:var(--ink-faint)}
+  .card-meta .proj{color:var(--ink-soft); font-weight:500}
+  .mini-tag::before{content:"#"}
+  .card-date{margin-left:auto; white-space:nowrap}
+  .triage{display:flex; gap:6px; flex-wrap:wrap; margin-top:9px}
+  .triage .btn{height:28px; font-size:12.5px; padding:0 9px}
+
+  .empty{text-align:center; padding:56px 20px; border:1px dashed var(--line-strong); border-radius:14px; background:var(--surface-2); margin-top:12px}
+  .empty .mono{font-family:var(--serif); font-size:26px; margin:0 0 8px; font-weight:500}
+  .empty p{color:var(--ink-soft); max-width:440px; margin:0 auto 18px}
+  .empty .actions{display:flex; gap:10px; justify-content:center; flex-wrap:wrap}
+
+  /* brief */
+  .brief-sec{margin-top:18px}
+  .brief-sec h3{display:flex; align-items:center; gap:10px; font-size:14px; font-weight:600; margin:0 0 8px; color:var(--accent-ink)}
+  .brief-sec h3::after{content:""; flex:1; height:1px; background:var(--line)}
+
+  /* modal */
+  .scrim{position:fixed; inset:0; background:rgba(20,22,26,.44); backdrop-filter:blur(2px); z-index:80; display:none; align-items:flex-start; justify-content:center; padding:40px 16px; overflow:auto}
+  .scrim.open{display:flex}
+  .modal{width:100%; max-width:660px; background:var(--surface); border:1px solid var(--line-strong); border-radius:14px; box-shadow:var(--shadow); overflow:hidden; animation:pop .14s ease}
+  .modal.narrow{max-width:520px}
+  @keyframes pop{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
+  @media (prefers-reduced-motion:reduce){ .modal,aside{animation:none; transition:none} }
+  @media (max-width:760px){ .scrim{padding:0} .modal{border-radius:0; min-height:100%; border:0; display:flex; flex-direction:column} .modal-body{flex:1 0 auto} }
+  .modal-head{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px 18px; border-bottom:1px solid var(--line); position:sticky; top:0; background:var(--surface); z-index:2}
+  .modal-head h2{margin:0; font-size:15.5px; font-weight:600}
+  .modal-head .step{font-size:12px; color:var(--ink-faint); font-weight:400; margin-left:6px}
+  .modal-body{padding:16px 18px; display:flex; flex-direction:column; gap:14px}
+  .modal-foot{display:flex; align-items:center; gap:10px; padding:12px 18px; border-top:1px solid var(--line); background:var(--surface-2); position:sticky; bottom:0; flex-wrap:wrap}
+  .modal-foot .spacer{flex:1}
+  .field label, .field .lbl{display:block; font-size:12.5px; font-weight:500; color:var(--ink-soft); margin-bottom:6px}
+  .field .note{font-weight:300; font-style:italic; color:var(--ink-faint)}
+  /* Guidance reads as guidance: light italic placeholders, never mistaken for data */
+  ::placeholder{font-style:italic; font-weight:300; color:var(--ink-faint); opacity:.8}
+  input[type=date]:invalid{font-style:italic; font-weight:300; color:var(--ink-faint)}
+  /* Sample notes are clearly marked */
+  .card.is-sample{border-style:dashed; border-left-style:solid}
+  .card.is-sample .card-title, .row-title.is-sample{font-style:italic; font-weight:400; color:var(--ink-soft)}
+  .chip.sample{font-style:italic; border-style:dashed; color:var(--ink-faint)}
+  .field input[type=text], .field input[type=url], .field input[type=email], .field input[type=date], .field textarea, .field select{width:100%; border:1px solid var(--line-strong); background:var(--surface-2); border-radius:var(--radius-s); padding:9px 11px; font-size:14.5px; resize:vertical}
+  .field select{height:40px; padding:0 9px; background:var(--surface-2)}
+  .field input:focus, .field textarea:focus, .field select:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft); background:var(--surface)}
+  .field textarea{min-height:84px; line-height:1.55}
+  .field textarea.distil{border-style:dashed; min-height:64px}
+  .two{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+  @media (max-width:560px){ .two{grid-template-columns:1fr} }
+  .seg{display:flex; gap:6px; flex-wrap:wrap}
+  .seg button{flex:1 1 auto; min-width:88px; display:flex; align-items:center; gap:7px; justify-content:center; padding:8px 9px; border:1px solid var(--line-strong); background:var(--surface-2); color:var(--ink-soft); border-radius:var(--radius-s); cursor:pointer; font-size:13px; font-weight:500}
+  .seg button .swatch{width:9px; height:9px; border-radius:2.5px}
+  .seg button[aria-pressed=true]{border-color:var(--sw); color:var(--ink); background:var(--surface); box-shadow:inset 0 0 0 1px var(--sw)}
+  .step-box{border:1px solid var(--accent-line); background:var(--accent-soft); border-radius:10px; padding:12px 13px; display:flex; flex-direction:column; gap:12px}
+  .step-box .step-title{font-size:13px; font-weight:600; color:var(--accent-ink); margin:0}
+  .suggest{font-size:12.5px; color:var(--ink-soft); font-style:italic}
+  .suggest b{font-style:normal}
+  .suggest b{color:var(--ink); font-weight:600}
+  .unavail{font-size:12.5px; color:var(--n-explore); margin-top:6px}
+  details.more{border:1px solid var(--line); border-radius:10px; padding:0 13px}
+  details.more summary{cursor:pointer; padding:11px 0; font-size:13px; font-weight:500; color:var(--ink-soft)}
+  details.more[open] summary{border-bottom:1px solid var(--line); margin-bottom:12px}
+  details.more .inner{display:flex; flex-direction:column; gap:12px; padding-bottom:13px}
+  .media{border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--surface-2)}
+  .media img, .media video{display:block; width:100%; max-height:380px; object-fit:contain; background:#0d0f12}
+  .media audio{display:block; width:100%; padding:10px}
+  .media .media-meta{display:flex; gap:10px; flex-wrap:wrap; align-items:center; padding:8px 11px; font-size:12px; color:var(--ink-faint); border-top:1px solid var(--line)}
+  .media .fp{font-family:ui-monospace,Menlo,monospace; font-size:11px}
+  .marks{display:flex; gap:6px; flex-wrap:wrap; padding:0 11px 10px}
+  .mark-btn{font-size:12px; border:1px solid var(--line-strong); background:var(--surface); border-radius:20px; padding:2px 9px; cursor:pointer}
+  .mark-btn:hover{border-color:var(--accent)}
+  .check{display:flex; align-items:center; gap:8px; font-size:13.5px; color:var(--ink-soft); cursor:pointer}
+  .check input{width:16px; height:16px; accent-color:var(--accent)}
+
+  /* about / roadmap */
+  .prose .lead{font-family:var(--serif); font-size:21px; line-height:1.35; margin:0 0 6px; font-weight:500}
+  .prose .tagline{font-size:14px; color:var(--accent-ink); font-weight:600; margin:0 0 10px}
+  .prose p{margin:0 0 6px; color:var(--ink-soft); font-size:14.5px; line-height:1.6}
+  .prose h3{display:flex; align-items:center; gap:10px; font-size:13.5px; font-weight:600; color:var(--accent-ink); margin:18px 0 8px}
+  .prose h3::after{content:""; flex:1; height:1px; background:var(--line)}
+  .prose ul{margin:0; padding-left:0; list-style:none}
+  .prose li{position:relative; padding-left:18px; margin-bottom:6px; color:var(--ink-soft); font-size:14px; line-height:1.55}
+  .prose li::before{content:""; position:absolute; left:2px; top:9px; width:5px; height:5px; border-radius:1.5px; background:var(--accent); opacity:.6}
+  .prose li b{color:var(--ink); font-weight:600}
+  .rhythm{display:grid; grid-template-columns:auto 1fr auto; gap:6px 14px; font-size:13.5px; color:var(--ink-soft); margin:0}
+  .rhythm dt{font-weight:600; color:var(--ink)}
+  .rhythm dd{margin:0}
+  .rhythm .t{color:var(--ink-faint); font-variant-numeric:tabular-nums; white-space:nowrap}
+  .road{display:flex; flex-direction:column; gap:10px}
+  .road .item{border:1px solid var(--line); border-radius:10px; padding:11px 13px; background:var(--surface-2)}
+  .road .item b{display:block; font-size:14px; margin-bottom:2px}
+  .road .item span{font-size:13.5px; color:var(--ink-soft)}
+  .stage{font-size:12px; font-weight:600; color:var(--ink-faint); margin:14px 0 6px}
+
+  /* recorder */
+  .rec-face{display:flex; flex-direction:column; align-items:center; gap:12px; padding:8px 0 4px}
+  .rec-time{font-family:var(--serif); font-size:44px; font-variant-numeric:tabular-nums; line-height:1}
+  .rec-btn{width:76px; height:76px; border-radius:50%; border:4px solid var(--line-strong); background:var(--surface); display:flex; align-items:center; justify-content:center; cursor:pointer}
+  .rec-btn span{width:30px; height:30px; border-radius:50%; background:var(--danger); transition:.15s}
+  .rec-btn.on span{border-radius:6px; width:26px; height:26px}
+  .rec-btn:disabled{opacity:.45; cursor:not-allowed}
+  .rec-live{display:flex; align-items:center; gap:7px; font-size:13px; color:var(--danger); font-weight:600}
+  .rec-live i{width:9px; height:9px; border-radius:50%; background:var(--danger); animation:blink 1.2s infinite}
+  @keyframes blink{50%{opacity:.25}}
+  .star-btn{height:48px; padding:0 22px; font-size:15px}
+
+  .drop{position:fixed; inset:0; z-index:90; background:color-mix(in srgb,var(--accent) 16%,transparent); border:3px dashed var(--accent); display:none; align-items:center; justify-content:center; font-family:var(--serif); font-size:26px; color:var(--accent-ink); pointer-events:none}
+  .drop.on{display:flex}
+  .toast{position:fixed; bottom:22px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--ink); color:var(--paper); padding:10px 18px; border-radius:30px; font-size:13.5px; z-index:100; opacity:0; transition:.18s; pointer-events:none; box-shadow:var(--shadow); max-width:90vw; text-align:center}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+  .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+  @media print{
+    header.top, aside, .quick, .main-tools, .banner, .no-print{display:none !important}
+    body::before{display:none}
+    .layout{display:block}
+    .card,.panel{break-inside:avoid; box-shadow:none}
+  }
+  /* pilot registration screen */
+  .gate{position:fixed; inset:0; z-index:75; background:var(--paper); overflow:auto; display:flex; justify-content:center; align-items:flex-start;
+    padding:max(24px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 40px max(16px,env(safe-area-inset-left,0px))}
+  .gate[hidden]{display:none !important}
+  .gate-card{width:100%; max-width:540px; margin-top:5vh; background:var(--surface); border:1px solid var(--line-strong); border-radius:14px; padding:26px 24px 22px; box-shadow:var(--shadow)}
+  .gate-card .brand{cursor:default}
+  .gate-title{font-family:var(--serif); font-weight:500; font-size:28px; line-height:1.15; margin:18px 0 6px}
+  .gate-lead{color:var(--ink-soft); margin:0 0 18px; font-size:14.5px}
+  .gate-lead b{color:var(--ink); font-weight:600; font-style:normal}
+  #reg-form{display:flex; flex-direction:column; gap:12px}
+  .gate-err{color:var(--danger); font-size:13.5px; border:1px solid color-mix(in srgb,var(--danger) 45%,transparent); border-radius:var(--radius-s); padding:8px 11px}
+  .gate-foot{font-size:12.5px; color:var(--ink-faint); font-style:italic; margin:14px 0 0}
+  .linkish{border:0; background:none; padding:0; color:var(--accent-ink); text-decoration:underline; text-underline-offset:2px; cursor:pointer; font:inherit}
+  .checks{display:flex; flex-wrap:wrap; gap:8px 16px}
+  @media (max-width:560px){ .gate-card{padding:22px 16px 18px; margin-top:2vh} }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-inner">
+    <button class="btn icon ghost" id="nav-toggle" aria-label="Open navigation">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <button class="brand" id="brand" title="Work Lab Atelier — home">
+      <span class="mark"><span class="wl">Work Lab </span>Atelier<span class="dot"></span></span>
+      <span class="tag">Know it. Find it. Act when it counts.</span>
+    </button>
+    <div class="search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="search" type="search" placeholder="Search everything…" autocomplete="off" aria-label="Search your notes">
+      <kbd>/</kbd>
+    </div>
+    <div class="top-actions">
+      <button class="btn primary" id="capture-btn"><span class="plus">+</span><span class="label">Capture</span></button>
+      <div class="menu">
+        <button class="btn icon ghost" id="menu-btn" aria-label="More" aria-haspopup="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>
+        </button>
+        <div class="menu-pop" id="menu-pop" role="menu">
+          <button data-menu="about">About Work Lab Atelier</button>
+          <button data-menu="roadmap">What's coming</button>
+          <div class="sep"></div>
+          <button data-menu="profile">My name &amp; firm <span class="badge" id="who-badge"></span></button>
+          <button data-menu="checkin" id="m-checkin" hidden>Pilot check-in</button>
+          <button data-menu="shared" id="m-shared" hidden>Pilot: what's shared</button>
+          <button data-menu="install" id="m-install">Install as an app</button>
+          <button data-menu="storage">Where my notes are stored</button>
+          <button data-menu="calendar">Add weekly review to my calendar</button>
+          <button data-menu="requests">Requests I've made <span class="badge" id="req-count">0</span></button>
+          <div class="sep"></div>
+          <button data-menu="export">Export backup (.json)</button>
+          <button data-menu="import">Import backup</button>
+          <button data-menu="sample">Load sample notes</button>
+          <button data-menu="clear-sample">Remove sample notes</button>
+          <div class="sep"></div>
+          <button data-menu="theme"><span id="theme-label">Dark mode</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="scrim-nav" id="scrim-nav"></div>
+<div class="wrap">
+  <div class="banner" id="reconnect" hidden>
+    <span><strong>Your Atelier folder needs reconnecting.</strong> You're seeing this browser's copy until you do.</span>
+    <button class="btn sm primary" id="reconnect-btn">Reconnect folder</button>
+  </div>
+</div>
+<div class="wrap layout">
+  <aside id="nav">
+    <div class="nav-group">
+      <button class="nav-item" data-go="home"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 11 9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Next steps</button>
+      <button class="nav-item" data-go="inbox"><span class="swatch" style="background:var(--c-inbox)"></span>Inbox<span class="count" data-c="inbox">0</span></button>
+      <button class="nav-item" data-go="review"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12a8 8 0 1 0 3-6.2"/><path d="M4 4v4h4"/></svg>Weekly review</button>
+    </div>
+    <div class="nav-group">
+      <div class="nav-title">Shelves (P.A.R.A.)</div>
+      <button class="nav-item" data-go="lib:project"><span class="swatch" style="background:var(--c-project)"></span>Projects<span class="count" data-c="project">0</span></button>
+      <div id="proj-list"></div>
+      <button class="nav-item" data-go="lib:area"><span class="swatch" style="background:var(--c-area)"></span>Areas<span class="count" data-c="area">0</span></button>
+      <button class="nav-item" data-go="lib:resource"><span class="swatch" style="background:var(--c-resource)"></span>Resources<span class="count" data-c="resource">0</span></button>
+      <button class="nav-item" data-go="lib:archive"><span class="swatch" style="background:var(--c-archive)"></span>Archive<span class="count" data-c="archive">0</span></button>
+      <button class="nav-item" data-go="lib:all"><span class="swatch" style="background:var(--ink-faint)"></span>Everything<span class="count" data-c="all">0</span></button>
+    </div>
+    <div class="nav-group" id="tags-group" hidden>
+      <div class="nav-title">Tags</div>
+      <div class="tags-wrap" id="tags-wrap"></div>
+    </div>
+    <div class="side-foot">
+      <button class="store-pill" id="store-pill"><span class="led"></span><span id="store-label">This browser</span></button>
+      <div id="who" style="color:var(--ink-soft);font-weight:500"></div>
+      <div><span class="wla">WLA</span> · Work Lab Atelier · v1 pilot</div>
+      <div>Capture → Organise → Distil → Express</div>
+    </div>
+  </aside>
+  <main id="main"></main>
+</div>
+
+<div class="scrim" id="scrim" role="dialog" aria-modal="true"><div class="modal" id="modal"></div></div>
+<input type="file" id="pick-image" accept="image/*" multiple class="vh">
+<input type="file" id="pick-video" accept="video/*" class="vh">
+<input type="file" id="pick-file" multiple class="vh">
+<input type="file" id="pick-import" accept="application/json,.json" class="vh">
+<div class="drop" id="drop">Drop to add to your Inbox</div>
+<div class="gate" id="gate" hidden>
+  <div class="gate-card" role="dialog" aria-modal="true" aria-labelledby="gate-title">
+    <div class="brand"><span class="mark"><span class="wl">Work Lab </span>Atelier<span class="dot"></span></span></div>
+    <h1 class="gate-title" id="gate-title">Join the Atelier pilot</h1>
+    <p class="gate-lead">Know it. Find it. Act when it counts. <b>Register once</b> to start using Atelier on this device. After that it works offline.</p>
+    <form id="reg-form" novalidate>
+      <div class="two"><div class="field"><label for="reg-name">Your name</label><input type="text" id="reg-name" autocomplete="name" required placeholder="As you'd like to be greeted"></div>
+      <div class="field"><label for="reg-email">Email</label><input type="email" id="reg-email" autocomplete="email" required placeholder="you@firm.com"></div></div>
+      <div class="two"><div class="field"><label for="reg-firm">Firm</label><input type="text" id="reg-firm" autocomplete="organization" required placeholder="Your practice"></div>
+      <div class="field"><label for="reg-role">Role <span class="note">— optional</span></label><input type="text" id="reg-role" autocomplete="organization-title" placeholder="e.g. Principal, Project architect"></div></div>
+      <div class="two"><div class="field"><label for="reg-size">Firm size <span class="note">— optional</span></label><select id="reg-size"><option value="">Choose…</option><option>1–5</option><option>6–20</option><option>21–50</option><option>51+</option></select></div>
+      <div class="field"><label for="reg-invite">Invite code</label><input type="text" id="reg-invite" autocomplete="off" autocapitalize="characters" required placeholder="From your invitation"></div></div>
+      <label class="check"><input type="checkbox" id="reg-consent"> <span>I agree to share my registration details and <b>usage counts</b> with the pilot team. My notes, photos and recordings are never sent. <button type="button" class="linkish" data-menu="shared">What exactly is shared?</button></span></label>
+      <div class="gate-err" id="reg-err" role="alert" hidden></div>
+      <button class="btn primary" type="submit" id="reg-submit" style="justify-content:center">Register and start</button>
+    </form>
+    <p class="gate-foot">Registration needs an internet connection once. Your notes stay on this device, or in a folder you choose.</p>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="config.js"></script>
+<script>
+(function(){
+"use strict";
+
+/* =====================================================================
+   CONSTANTS — the vocabulary every Atelier note shares.
+   ===================================================================== */
+var SCHEMA = 1;
+var KP = "## Key points";
+
+var PARA = {
+  inbox:    {label:"Inbox",     one:"Inbox",    dir:"00 Inbox",     hint:"The common dump. Everything lands here first; sort it later."},
+  project:  {label:"Projects",  one:"Project",  dir:"01 Projects",  hint:"Active work with a deadline."},
+  area:     {label:"Areas",     one:"Area",     dir:"02 Areas",     hint:"Ongoing responsibilities with no end date."},
+  resource: {label:"Resources", one:"Resource", dir:"03 Resources", hint:"Reference you'll draw on across jobs."},
+  archive:  {label:"Archive",   one:"Archive",  dir:"04 Archive",   hint:"Finished or dormant — out of the way, still searchable."}
+};
+var PARA_ORDER = ["inbox","project","area","resource","archive"];
+
+var NEXT = {
+  resolve: {label:"Resolve", hint:"has a deadline or consequence"},
+  decide:  {label:"Decide",  hint:"needs a judgment call"},
+  explore: {label:"Explore", hint:"read or try when there's time"},
+  keep:    {label:"Keep",    hint:"reference, no action"}
+};
+var NEXT_ORDER = ["resolve","decide","explore","keep"];
+
+/* Source type "S": confirmed by the user; Atelier pre-fills the rest. */
+var SOURCES = [
+  {v:"authority",  label:"Authority — BCA / URA / SCDF / WD", type:"condition",  next:"resolve", action:"condition",  para:"project"},
+  {v:"client",     label:"Client",                             type:"client",     next:"decide",  action:"clientpref", para:"project"},
+  {v:"consultant", label:"Consultant — MEP / C&S / QS",        type:"note",       next:"resolve", action:"flag",       para:"project"},
+  {v:"contractor", label:"Contractor",                         type:"note",       next:"resolve", action:"followup",   para:"project"},
+  {v:"supplier",   label:"Supplier / advert",                  type:"product",    next:"explore", action:"read",       para:"resource"},
+  {v:"article",    label:"Article / research / web",           type:"note",       next:"explore", action:"read",       para:"resource"},
+  {v:"site",       label:"Site observation",                   type:"lesson",     next:"keep",    action:"lesson",     para:"resource"},
+  {v:"precedent",  label:"Precedent — a building seen",        type:"precedent",  next:"keep",    action:"file",       para:"resource"},
+  {v:"internal",   label:"Own idea / internal",                type:"note",       next:"keep",    action:"file",       para:"area"},
+  {v:"other",      label:"Other",                              type:null,         next:null,      action:null,         para:null}
+];
+function srcOf(v){ for(var i=0;i<SOURCES.length;i++){ if(SOURCES[i].v===v) return SOURCES[i]; } return null; }
+
+/* Follow-up action. Unavailable ones get a clear reply and are logged. */
+var ACTIONS = [
+  {v:"file",       label:"File for reference",                  next:"keep"},
+  {v:"read",       label:"Read / explore later",                next:"explore"},
+  {v:"condition",  label:"Log as a condition to resolve",       next:"resolve", type:"condition"},
+  {v:"decision",   label:"Record as a decision",                next:"keep",    type:"decision"},
+  {v:"clientpref", label:"Record a client preference",          next:"decide",  type:"client"},
+  {v:"lesson",     label:"Capture as a lesson",                 next:"keep",    type:"lesson"},
+  {v:"flag",       label:"Flag as an open issue on a project",  next:"resolve"},
+  {v:"followup",   label:"Follow up by a date",                 next:"resolve"},
+  {v:"brief",      label:"Add to the project brief",            next:"decide",  pin:true},
+  {v:"other",      label:"Other — request an action…",          other:true}
+];
+function actOf(v){ for(var i=0;i<ACTIONS.length;i++){ if(ACTIONS[i].v===v) return ACTIONS[i]; } return null; }
+var NOT_AVAILABLE = "Option requested not available now — noted for a future version.";
+
+var TYPES = {
+  note:      {label:"Note", fields:[]},
+  decision:  {label:"Decision", fields:[
+               {k:"what", label:"What was decided", area:true},
+               {k:"date", label:"Date decided", date:true},
+               {k:"approvedBy", label:"Approved by"},
+               {k:"why", label:"Why", area:true}]},
+  condition: {label:"Condition", fields:[
+               {k:"authority", label:"Authority"},
+               {k:"reference", label:"WD / reference no."},
+               {k:"requirement", label:"Requirement", area:true}]},
+  client:    {label:"Client preference", fields:[
+               {k:"client", label:"Client"},
+               {k:"likes", label:"Likes / asks for", area:true},
+               {k:"dislikes", label:"Rejects / avoids", area:true},
+               {k:"evidence", label:"Evidence (meeting, message, date)"}]},
+  lesson:    {label:"Lesson learned", fields:[
+               {k:"happened", label:"What happened", area:true},
+               {k:"nextTime", label:"What we'd do next time", area:true},
+               {k:"appliesTo", label:"Applies to"}]},
+  precedent: {label:"Precedent", fields:[
+               {k:"location", label:"Location"},
+               {k:"architect", label:"Architect"},
+               {k:"typology", label:"Typology"},
+               {k:"material", label:"Materials"},
+               {k:"why", label:"What makes it good", area:true}]},
+  product:   {label:"Product", fields:[
+               {k:"product", label:"Product"},
+               {k:"supplier", label:"Supplier"},
+               {k:"usedOn", label:"Used on"},
+               {k:"performance", label:"How it performed", area:true},
+               {k:"price", label:"Price quoted"}]},
+  regulation:{label:"Regulation change", fields:[
+               {k:"authority", label:"Authority"},
+               {k:"circular", label:"Circular / reference"},
+               {k:"effective", label:"Effective date", date:true},
+               {k:"meaning", label:"What it means for us", area:true},
+               {k:"affects", label:"Projects affected"}]},
+  meeting:   {label:"Meeting recording", fields:[]}
+};
+var TYPE_ORDER = ["note","decision","condition","client","lesson","precedent","product","regulation","meeting"];
+
+var ICON = {
+  note:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M8 13h8M8 17h5"/></svg>',
+  link:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>',
+  image:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m21 16-5-5-8 8"/></svg>',
+  shot:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/></svg>',
+  audio:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
+  video:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3"/></svg>',
+  file:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5 12.6 21a5 5 0 0 1-7.1-7.1l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7l-8.5 8.5a1.7 1.7 0 0 1-2.4-2.4l7.8-7.8"/></svg>'
+};
+
+/* =====================================================================
+   SMALL HELPERS
+   ===================================================================== */
+var $ = function(s,r){ return (r||document).querySelector(s); };
+var $$ = function(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); };
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c];}); }
+function nowISO(){ return new Date().toISOString(); }
+function uid(){ return "n" + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+function today(){ var d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function dayOffset(n){ var d=new Date(); d.setDate(d.getDate()+n); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function isoDaysAgo(n){ return new Date(Date.now()-n*86400000).toISOString(); }
+function ageDays(iso){ return iso ? (Date.now()-new Date(iso).getTime())/86400000 : 9999; }
+function dueDiff(d){ if(!d) return null; var t=new Date(d+"T00:00:00"); var n=new Date(today()+"T00:00:00"); return Math.round((t-n)/86400000); }
+function fmtDue(d){
+  var x=dueDiff(d); if(x===null) return "";
+  if(x<0) return (-x)+"d overdue"; if(x===0) return "due today"; if(x===1) return "due tomorrow";
+  if(x<7) return "due in "+x+"d";
+  return "due "+new Date(d+"T00:00:00").toLocaleDateString(undefined,{day:"numeric",month:"short"});
+}
+function fmtDate(iso){
+  if(!iso) return ""; var d=new Date(iso), a=ageDays(iso);
+  if(a<1 && d.getDate()===new Date().getDate()) return "today";
+  if(a<2) return "yesterday"; if(a<7) return Math.floor(a)+"d ago";
+  return d.toLocaleDateString(undefined,{day:"numeric",month:"short",year:d.getFullYear()===new Date().getFullYear()?undefined:"numeric"});
+}
+function fmtClock(s){ s=Math.max(0,Math.floor(s)); var h=Math.floor(s/3600), m=Math.floor(s%3600/60), x=s%60; return (h?h+":"+String(m).padStart(2,"0"):String(m).padStart(2,"0"))+":"+String(x).padStart(2,"0"); }
+function fmtSize(b){ if(b==null) return ""; if(b<1024) return b+" B"; if(b<1048576) return (b/1024).toFixed(0)+" KB"; return (b/1048576).toFixed(1)+" MB"; }
+function safeName(s){ return String(s||"").replace(/[<>:"\/\\|?*\x00-\x1f]/g," ").replace(/\s+/g," ").trim().replace(/[. ]+$/,"").slice(0,80); }
+function kindOfMime(m){ m=m||""; if(m.indexOf("image/")===0) return "image"; if(m.indexOf("audio/")===0) return "audio"; if(m.indexOf("video/")===0) return "video"; return "file"; }
+function toast(msg, ms){ var t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(t._h); t._h=setTimeout(function(){ t.classList.remove("show"); }, ms||2200); }
+function stripExt(n){ return String(n||"").replace(/\.[^.]+$/,""); }
+
+async function sha256(blob){
+  try{
+    if(!blob || !window.crypto || !crypto.subtle || blob.size>300*1048576) return null;
+    var buf = await blob.arrayBuffer();
+    var h = await crypto.subtle.digest("SHA-256", buf);
+    return Array.prototype.map.call(new Uint8Array(h), function(b){ return b.toString(16).padStart(2,"0"); }).join("");
+  }catch(e){ return null; }
+}
+
+/* =====================================================================
+   NOTE FORMAT — plain Markdown with a header block (Obsidian-readable).
+   Values are JSON, which is valid YAML, so the header round-trips safely.
+   ===================================================================== */
+var FM_KEYS = ["id","schema","title","type","kind","para","project","folder","source","sourceRef","next","action","actionNote","due","done","pinned","visibility","tags","url","fields","attachments","marks","attendees","consent","created","updated"];
+
+function normalize(n){
+  n = n || {};
+  return {
+    id: n.id || uid(), schema: SCHEMA,
+    title: n.title || "", type: TYPES[n.type] ? n.type : "note", kind: n.kind || "note",
+    para: PARA[n.para] ? n.para : "inbox", project: n.project || "", folder: safeName(n.folder || ""),
+    source: n.source || "", sourceRef: n.sourceRef || "",
+    next: NEXT[n.next] ? n.next : "", action: n.action || "", actionNote: n.actionNote || "",
+    due: n.due || "", done: !!n.done, pinned: !!n.pinned,
+    visibility: n.visibility === "shared" ? "shared" : "private",
+    tags: Array.isArray(n.tags) ? n.tags : [], url: n.url || "",
+    fields: (n.fields && typeof n.fields === "object") ? n.fields : {},
+    attachments: Array.isArray(n.attachments) ? n.attachments : [],
+    marks: Array.isArray(n.marks) ? n.marks : [], attendees: n.attendees || "", consent: !!n.consent,
+    body: n.body || "", distilled: n.distilled || "",
+    created: n.created || nowISO(), updated: n.updated || nowISO()
+  };
+}
+function toMarkdown(n){
+  var lines = ["---","atelier: 1"];
+  FM_KEYS.forEach(function(k){ if(n[k]!==undefined) lines.push(k+": "+JSON.stringify(n[k])); });
+  lines.push("---","");
+  lines.push(n.body || "");
+  if(n.distilled){ lines.push("", KP, "", n.distilled); }
+  return lines.join("\n") + "\n";
+}
+function fromMarkdown(txt){
+  var m = String(txt).match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
+  if(!m) return null;
+  var fm = {};
+  m[1].split(/\r?\n/).forEach(function(line){
+    var i=line.indexOf(":"); if(i<1) return;
+    var k=line.slice(0,i).trim(), v=line.slice(i+1).trim();
+    try{ fm[k]=JSON.parse(v); }catch(e){ fm[k]=v; }
+  });
+  if(!fm.id) return null;
+  var body = "\n"+m[2], distilled = "";
+  var j = body.lastIndexOf("\n"+KP+"\n");
+  if(j < 0 && body.slice(-(KP.length+1)) === "\n"+KP) j = body.length-KP.length-1;
+  if(j >= 0){ distilled = body.slice(j+KP.length+1).trim(); body = body.slice(0,j); }
+  fm.body = body.trim(); fm.distilled = distilled;
+  return normalize(fm);
+}
+function dirFor(n){
+  var d = PARA[n.para].dir;
+  if(n.para==="project") d += "/" + (safeName(n.project) || "_Unassigned");
+  else if(n.para==="archive" && n.project) d += "/" + safeName(n.project);
+  if(n.folder) d += "/" + safeName(n.folder);
+  return d;
+}
+/* The folder is the source of truth: where a file actually sits wins,
+   so notes moved in Explorer / Finder are picked up, not fought. */
+function applyLocation(n, path){
+  var parts = path.split("/"), para = null;
+  for(var k in PARA){ if(PARA[k].dir===parts[0]) para=k; }
+  if(!para) return n;
+  n.para = para;
+  var rest = parts.slice(1);
+  if(para==="project" || (para==="archive" && n.project && rest[0]===safeName(n.project))){
+    var pc = rest.shift();
+    if(para==="project" && pc && pc!=="_Unassigned" && safeName(n.project)!==pc) n.project = pc;
+  }
+  n.folder = rest.join(" ").trim();
+  return n;
+}
+function fileFor(n){ return (safeName(n.title) || "Untitled").slice(0,70) + " [" + n.id + "].md"; }
+
+/* =====================================================================
+   STORAGE ADAPTERS — one interface; swap the adapter, not the app.
+   Browser (IndexedDB) now · Folder (SSOT) now · office hub later.
+   ===================================================================== */
+function idbOpen(){
+  return new Promise(function(res,rej){
+    if(!window.indexedDB) return rej(new Error("no idb"));
+    var r = indexedDB.open("atelier", 1);
+    r.onupgradeneeded = function(){ var d=r.result;
+      if(!d.objectStoreNames.contains("notes")) d.createObjectStore("notes",{keyPath:"id"});
+      if(!d.objectStoreNames.contains("blobs")) d.createObjectStore("blobs");
+      if(!d.objectStoreNames.contains("kv")) d.createObjectStore("kv"); };
+    r.onsuccess = function(){ res(r.result); };
+    r.onerror = function(){ rej(r.error); };
+  });
+}
+function idbDo(db, store, mode, fn){
+  return new Promise(function(res,rej){
+    var t = db.transaction(store, mode), s = t.objectStore(store), out;
+    var r = fn(s); if(r) r.onsuccess = function(){ out = r.result; };
+    t.oncomplete = function(){ res(out); }; t.onerror = function(){ rej(t.error); }; t.onabort = function(){ rej(t.error); };
+  });
+}
+
+function BrowserAdapter(db){ this.db=db; this.kind="browser"; this.label="This browser"; }
+BrowserAdapter.prototype.init = async function(){};
+BrowserAdapter.prototype.list = async function(){ var a = await idbDo(this.db,"notes","readonly",function(s){ return s.getAll(); }); return (a||[]).map(normalize); };
+BrowserAdapter.prototype.put = function(n){ var c = JSON.parse(JSON.stringify(n)); return idbDo(this.db,"notes","readwrite",function(s){ return s.put(c); }); };
+BrowserAdapter.prototype.del = async function(n){ var db=this.db; await idbDo(db,"notes","readwrite",function(s){ return s.delete(n.id); }); for(var i=0;i<n.attachments.length;i++){ var p=n.attachments[i].path; await idbDo(db,"blobs","readwrite",function(s){ return s.delete(p); }); } };
+BrowserAdapter.prototype.putBlob = function(path, blob){ return idbDo(this.db,"blobs","readwrite",function(s){ return s.put(blob, path); }); };
+BrowserAdapter.prototype.getBlob = function(path){ return idbDo(this.db,"blobs","readonly",function(s){ return s.get(path); }); };
+BrowserAdapter.prototype.getMeta = async function(){ return (await idbDo(this.db,"kv","readonly",function(s){ return s.get("meta"); })) || {}; };
+BrowserAdapter.prototype.setMeta = function(m){ var c=JSON.parse(JSON.stringify(m)); return idbDo(this.db,"kv","readwrite",function(s){ return s.put(c,"meta"); }); };
+
+function MemoryAdapter(){ this.kind="memory"; this.label="Temporary (not saved)"; this.n=new Map(); this.b=new Map(); this.m={}; }
+MemoryAdapter.prototype.init = async function(){};
+MemoryAdapter.prototype.list = async function(){ return Array.from(this.n.values()).map(normalize); };
+MemoryAdapter.prototype.put = async function(n){ this.n.set(n.id, JSON.parse(JSON.stringify(n))); };
+MemoryAdapter.prototype.del = async function(n){ this.n.delete(n.id); };
+MemoryAdapter.prototype.putBlob = async function(p,b){ this.b.set(p,b); };
+MemoryAdapter.prototype.getBlob = async function(p){ return this.b.get(p); };
+MemoryAdapter.prototype.getMeta = async function(){ return this.m; };
+MemoryAdapter.prototype.setMeta = async function(m){ this.m=JSON.parse(JSON.stringify(m)); };
+
+function FolderAdapter(root){ this.root=root; this.kind="folder"; this.label=root.name; this.loc=new Map(); }
+FolderAdapter.prototype.dir = async function(path, create){
+  var d=this.root, parts=String(path).split("/").filter(Boolean);
+  for(var i=0;i<parts.length;i++){ d = await d.getDirectoryHandle(parts[i], {create: create!==false}); }
+  return d;
+};
+FolderAdapter.prototype.init = async function(){ for(var i=0;i<PARA_ORDER.length;i++) await this.dir(PARA[PARA_ORDER[i]].dir); await this.dir("_attachments"); await this.dir(".atelier"); };
+FolderAdapter.prototype.scan = async function(dh, path, out, depth){
+  for await (var entry of dh.entries()){
+    var name=entry[0], h=entry[1];
+    if(h.kind==="directory"){ if(depth<2) await this.scan(h, path+"/"+name, out, depth+1); }
+    else if(/\.md$/i.test(name)){
+      try{ var n = fromMarkdown(await (await h.getFile()).text()); if(n){ applyLocation(n, path); out.push(n); this.loc.set(n.id,{dir:path,name:name}); } }catch(e){}
+    }
+  }
+};
+FolderAdapter.prototype.list = async function(){ this.loc.clear(); var out=[]; for(var i=0;i<PARA_ORDER.length;i++){ var p=PARA[PARA_ORDER[i]].dir; await this.scan(await this.dir(p), p, out, 0); } return out; };
+FolderAdapter.prototype.writeFile = async function(dirPath, name, data){ var dh=await this.dir(dirPath); var fh=await dh.getFileHandle(name,{create:true}); var w=await fh.createWritable(); await w.write(data); await w.close(); };
+FolderAdapter.prototype.put = async function(n){
+  var d=dirFor(n), f=fileFor(n), prev=this.loc.get(n.id);
+  await this.writeFile(d, f, toMarkdown(n));
+  if(prev && (prev.dir!==d || prev.name!==f)){ try{ await (await this.dir(prev.dir,false)).removeEntry(prev.name); }catch(e){} }
+  this.loc.set(n.id,{dir:d,name:f});
+};
+FolderAdapter.prototype.del = async function(n){
+  var prev=this.loc.get(n.id);
+  if(prev){ try{ await (await this.dir(prev.dir,false)).removeEntry(prev.name); }catch(e){} }
+  try{ await (await this.dir("_attachments")).removeEntry(n.id,{recursive:true}); }catch(e){}
+  this.loc.delete(n.id);
+};
+FolderAdapter.prototype.putBlob = async function(path, blob){ var parts=path.split("/"), name=parts.pop(); await this.writeFile(parts.join("/"), name, blob); };
+FolderAdapter.prototype.getBlob = async function(path){ var parts=path.split("/"), name=parts.pop(); var dh=await this.dir(parts.join("/"),false); return (await dh.getFileHandle(name)).getFile(); };
+FolderAdapter.prototype.getMeta = async function(){ try{ return JSON.parse(await (await this.getBlob(".atelier/meta.json")).text()); }catch(e){ return {}; } };
+FolderAdapter.prototype.setMeta = function(m){ return this.putBlob(".atelier/meta.json", new Blob([JSON.stringify(m,null,2)],{type:"application/json"})); };
+
+/* =====================================================================
+   ENGINE — all knowledge logic lives here, behind a small API.
+   The UI calls it today; a future connector calls the same functions later.
+   ===================================================================== */
+var Engine = {
+  adapter:null, notes:[], meta:{}, urls:new Map(),
+  load: async function(){ this.notes = await this.adapter.list(); this.meta = await this.adapter.getMeta(); this.urls.forEach(function(u){ URL.revokeObjectURL(u); }); this.urls.clear(); },
+  get: function(id){ for(var i=0;i<this.notes.length;i++){ if(this.notes[i].id===id) return this.notes[i]; } return null; },
+  save: async function(n, keepTime){
+    n = normalize(n); if(!keepTime) n.updated = nowISO();
+    await this.adapter.put(n);
+    var i = this.notes.findIndex(function(x){ return x.id===n.id; });
+    if(i>=0) this.notes[i]=n; else this.notes.push(n);
+    return n;
+  },
+  create: function(data, keepTime){ return this.save(normalize(data), keepTime); },
+  remove: async function(id){ var n=this.get(id); if(!n) return; await this.adapter.del(n); this.notes = this.notes.filter(function(x){ return x.id!==id; }); },
+  attach: async function(n, blob, name){
+    var fname = safeName(name) || ("file-"+Date.now());
+    var path = "_attachments/" + n.id + "/" + fname;
+    await this.adapter.putBlob(path, blob);
+    var att = {name:fname, path:path, mime:blob.type||"", size:blob.size, kind:kindOfMime(blob.type), sha256: await sha256(blob), added: nowISO()};
+    n.attachments.push(att);
+    return att;
+  },
+  blobURL: async function(path){
+    if(this.urls.has(path)) return this.urls.get(path);
+    var b = await this.adapter.getBlob(path); if(!b) return null;
+    var u = URL.createObjectURL(b); this.urls.set(path,u); return u;
+  },
+  setMeta: async function(k,v){ this.meta[k]=v; await this.adapter.setMeta(this.meta); },
+  projects: function(){ var m={}; this.notes.forEach(function(n){ if(n.project){ var k=n.project.trim(); if(!m[k]) m[k]={code:k, n:0, live:0, last:""}; m[k].n++; if(n.para!=="archive") m[k].live++; if(n.updated>m[k].last) m[k].last=n.updated; } }); return Object.keys(m).sort(function(a,b){ return a.localeCompare(b); }).map(function(k){ return m[k]; }); },
+  folders: function(para, project){ var m={}; this.notes.forEach(function(n){ if(!n.folder) return; if(para && para!=="all" && n.para!==para) return; if(project && n.project.toLowerCase()!==project.toLowerCase()) return; m[n.folder]=(m[n.folder]||0)+1; }); return Object.keys(m).sort().map(function(f){ return {name:f, n:m[f]}; }); },
+  tags: function(){ var m={}; this.notes.forEach(function(n){ n.tags.forEach(function(t){ m[t]=(m[t]||0)+1; }); }); return Object.keys(m).sort(); },
+  counts: function(){ var c={all:0,inbox:0,project:0,area:0,resource:0,archive:0}; this.notes.forEach(function(n){ c.all++; c[n.para]++; }); return c; },
+  text: function(n){ var f=n.fields||{}; return [n.title,n.body,n.distilled,n.project,n.folder,n.url,n.attendees,n.actionNote,n.tags.join(" "),Object.keys(f).map(function(k){return f[k];}).join(" ")].join(" ").toLowerCase(); },
+  query: function(o){
+    o=o||{}; var q=(o.q||"").trim().toLowerCase(), self=this;
+    var out = this.notes.filter(function(n){
+      if(o.para && o.para!=="all" && n.para!==o.para) return false;
+      if(o.project && n.project.toLowerCase()!==o.project.toLowerCase()) return false;
+      if(o.tag && n.tags.indexOf(o.tag)===-1) return false;
+      if(o.folder && n.folder!==o.folder) return false;
+      if(q){ var hay=self.text(n); var words=q.split(/\s+/); for(var i=0;i<words.length;i++){ if(hay.indexOf(words[i])===-1) return false; } }
+      return true;
+    });
+    var s=o.sort||"updated";
+    out.sort(function(a,b){ if(s==="title") return (a.title||"").localeCompare(b.title||""); if(s==="due") return (a.due||"9999").localeCompare(b.due||"9999"); return (b[s]||"").localeCompare(a[s]||""); });
+    return out;
+  },
+  dashboard: function(){
+    var N=this.notes, live=N.filter(function(n){ return n.para!=="archive" && !n.done; });
+    var byDue=function(a,b){ return (a.due||"9999").localeCompare(b.due||"9999"); };
+    var inbox=N.filter(function(n){ return n.para==="inbox"; }).sort(function(a,b){ return a.created.localeCompare(b.created); });
+    var quiet=this.projects().filter(function(p){ return p.live>0 && ageDays(p.last)>60; });
+    return {
+      inbox: inbox,
+      resolve: live.filter(function(n){ return n.next==="resolve"; }).sort(byDue),
+      decide:  live.filter(function(n){ return n.next==="decide"; }).sort(byDue),
+      explore: live.filter(function(n){ return n.next==="explore"; }).sort(function(a,b){ return b.created.localeCompare(a.created); }),
+      distil:  N.filter(function(n){ return n.para!=="inbox" && n.para!=="archive" && !n.distilled && n.next!=="explore"; }).sort(function(a,b){ return b.updated.localeCompare(a.updated); }),
+      decisions: N.filter(function(n){ return n.type==="decision" && ageDays(n.updated)<=14; }).sort(function(a,b){ return b.updated.localeCompare(a.updated); }),
+      quiet: quiet,
+      lastReview: this.meta.lastReview || ""
+    };
+  },
+  brief: function(code){
+    var ns = this.notes.filter(function(n){ return n.project.toLowerCase()===String(code).toLowerCase(); });
+    var not = function(n){ return n.para!=="archive"; };
+    return {
+      code: code,
+      prefs: ns.filter(function(n){ return n.type==="client"; }),
+      open: ns.filter(function(n){ return not(n) && !n.done && (n.next==="resolve"||n.next==="decide"); }).sort(function(a,b){ return (a.due||"9999").localeCompare(b.due||"9999"); }),
+      decisions: ns.filter(function(n){ return n.type==="decision"; }).sort(function(a,b){ return b.updated.localeCompare(a.updated); }),
+      pinned: ns.filter(function(n){ return n.pinned; }),
+      lessons: ns.filter(function(n){ return n.type==="lesson"; }),
+      meetings: ns.filter(function(n){ return n.type==="meeting" || n.kind==="audio"; }),
+      other: ns.filter(function(n){ return ["client","decision","lesson","meeting"].indexOf(n.type)===-1 && n.kind!=="audio" && !n.pinned; }),
+      total: ns.length
+    };
+  }
+};
+/* Public engine API — the seam a future connector plugs into. */
+window.Atelier = {
+  version: "1.0-pilot", schema: SCHEMA,
+  capture: function(data){ return Engine.create(data); },
+  get: function(id){ return Engine.get(id); },
+  search: function(q, opts){ return Engine.query(Object.assign({q:q}, opts||{})); },
+  update: function(id, patch){ var n=Engine.get(id); return n ? Engine.save(Object.assign({}, n, patch)) : null; },
+  move: function(id, para, project){ var n=Engine.get(id); return n ? Engine.save(Object.assign({}, n, {para:para, project: project!=null?project:n.project})) : null; },
+  distil: function(id, text){ var n=Engine.get(id); return n ? Engine.save(Object.assign({}, n, {distilled:text})) : null; },
+  remove: function(id){ return Engine.remove(id); },
+  nextSteps: function(){ return Engine.dashboard(); },
+  projectBrief: function(code){ return Engine.brief(code); },
+  projects: function(){ return Engine.projects(); }
+};
+
+/* =====================================================================
+   FILES OUT — downloads helper (claude.ai viewer or plain browser).
+   ===================================================================== */
+async function offerFile(filename, data, mime){
+  var blob = data instanceof Blob ? data : new Blob([data],{type:mime||"application/octet-stream"});
+  try{
+    if(window.claude && typeof window.claude.use === "function"){
+      var dl = await window.claude.use("downloads");
+      if(dl){ await dl.save({filename:filename, data:blob}); toast("Saved."); return true; }
+    }
+  }catch(e){
+    if(e && e.code==="declined") return false;
+    if(e && e.code==="rejected_extension"){ toast("This file type downloads from the hosted version of Atelier."); return false; }
+  }
+  var a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=filename;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ URL.revokeObjectURL(a.href); },3000);
+  return true;
+}
+
+/* =====================================================================
+   UI STATE + RENDERING
+   ===================================================================== */
+var S = {view:"home", para:"all", project:"", tag:"", folder:"", q:"", sort:"updated", briefCode:""};
+var idbHandle = null;      // IndexedDB connection (handles + browser store)
+var browserAdapter = null;
+
+function paraColor(p){ return "var(--c-"+p+")"; }
+function kindIcon(n){ if(n.kind==="image") return n.title.indexOf("Screenshot")===0?ICON.shot:ICON.image; return ICON[n.kind] || (n.url?ICON.link:ICON.note); }
+
+function chipsFor(n){
+  var h = n.tags.indexOf("sample")>=0 ? '<span class="chip sample">Sample</span>' : "";
+  h += '<span class="chip para" style="--bucket:'+paraColor(n.para)+'">'+esc(n.para==="inbox"?"Inbox":(TYPES[n.type]?TYPES[n.type].label:"Note"))+'</span>';
+  if(n.next){ h += n.done ? '<span class="chip done">Done</span>' : '<span class="chip n-'+n.next+'">'+esc(NEXT[n.next].label)+'</span>'; }
+  if(n.due && !n.done){ var late = dueDiff(n.due)<0; h += '<span class="chip'+(late?" late":"")+'">'+esc(fmtDue(n.due))+'</span>'; }
+  if(n.source){ var s=srcOf(n.source); h += '<span class="chip src" title="Source">S: '+esc(s?s.label.split(" —")[0]:n.source)+'</span>'; }
+  if(n.visibility==="shared") h += '<span class="chip">Shared</span>';
+  return h;
+}
+function cardHTML(n, opts){
+  opts = opts || {};
+  var img = n.attachments.filter(function(a){ return a.kind==="image"; })[0];
+  var thumb = img ? '<div class="thumb"><img alt="" data-src="'+esc(img.path)+'"></div>' :
+              (n.kind!=="note" || n.url ? '<div class="thumb">'+(n.url && n.kind==="note"?ICON.link:kindIcon(n))+'</div>' : "");
+  var snip = n.distilled || n.body || n.url || (n.attendees ? "Attendees: "+n.attendees : "");
+  var tags = n.tags.slice(0,4).map(function(t){ return '<span class="mini-tag">'+esc(t)+'</span>'; }).join(" ");
+  var tri = "";
+  if(opts.triage){
+    tri = '<div class="triage" data-stop="1">' +
+      '<button class="btn sm primary" data-act="sort" data-id="'+n.id+'">Sort…</button>' +
+      PARA_ORDER.slice(1,4).map(function(p){ return '<button class="btn sm" data-act="move" data-para="'+p+'" data-id="'+n.id+'">→ '+PARA[p].one+'</button>'; }).join("") +
+      '</div>';
+  }
+  return '<article class="card'+(n.tags.indexOf("sample")>=0?" is-sample":"")+'" tabindex="0" data-open="'+n.id+'" style="--bucket:'+paraColor(n.para)+'">' + thumb +
+    '<div class="card-body"><div class="card-top"><h3 class="card-title">'+esc(n.title||"Untitled")+'</h3>'+chipsFor(n)+'</div>' +
+    (snip?'<p class="card-snip">'+esc(snip)+'</p>':"") +
+    '<div class="card-meta">'+(n.project?'<span class="proj">'+esc(n.project)+'</span>':"")+(n.folder?'<span>▸ '+esc(n.folder)+'</span>':"")+tags+(n.distilled?'<span>· distilled</span>':"")+'<span class="card-date">'+esc(fmtDate(n.updated))+'</span></div>' +
+    tri + '</div></article>';
+}
+async function hydrateThumbs(root){
+  var imgs = $$("img[data-src]", root||document);
+  for(var i=0;i<imgs.length;i++){ (function(im){ Engine.blobURL(im.getAttribute("data-src")).then(function(u){ if(u) im.src=u; }).catch(function(){}); })(imgs[i]); }
+}
+
+function renderSidebar(){
+  var c = Engine.counts();
+  $$("[data-c]").forEach(function(el){ var k=el.getAttribute("data-c"); el.textContent=c[k]||0; if(k==="inbox") el.classList.toggle("hot", (c.inbox||0)>0); });
+  var cur = S.view==="lib" ? "lib:"+S.para : S.view;
+  $$(".nav-item[data-go]").forEach(function(b){ b.classList.toggle("active", b.getAttribute("data-go")===cur && !S.project && !S.tag); });
+  var pl=$("#proj-list"), ps=Engine.projects().filter(function(p){ return p.live>0; });
+  pl.innerHTML = ps.map(function(p){ return '<button class="nav-item sub'+(S.view==="lib"&&S.project===p.code?" active":"")+'" data-proj="'+esc(p.code)+'">'+esc(p.code)+'<span class="count">'+p.live+'</span></button>'; }).join("");
+  var tags=Engine.tags(), tg=$("#tags-group");
+  tg.hidden = tags.length===0;
+  $("#tags-wrap").innerHTML = tags.map(function(t){ return '<button class="tag-chip'+(S.tag===t?" active":"")+'" data-tag="'+esc(t)+'">'+esc(t)+'</button>'; }).join("");
+  var pill=$("#store-pill"); pill.classList.toggle("browser", Engine.adapter.kind!=="folder");
+  $("#store-label").textContent = Engine.adapter.kind==="folder" ? "Folder: "+Engine.adapter.label : (Engine.adapter.kind==="memory" ? "Temporary — not saved" : "This browser · connect a folder");
+  $("#req-count").textContent = (Engine.meta.requests||[]).length;
+  var pr = profile();
+  $("#who").textContent = pr.name ? pr.name + (pr.firm ? " · " + pr.firm : "") : "";
+  $("#who-badge").textContent = pr.name || "set";
+}
+
+function rowHTML(n, opt){
+  opt=opt||{};
+  var meta = "";
+  if(opt.due && n.due){ meta = '<span class="meta'+(dueDiff(n.due)<0?" late":"")+'">'+esc(fmtDue(n.due))+'</span>'; }
+  else if(opt.project && n.project){ meta = '<span class="meta">'+esc(n.project)+'</span>'; }
+  else { meta = '<span class="meta">'+esc(fmtDate(opt.created?n.created:n.updated))+'</span>'; }
+  var cb = opt.check ? '<input type="checkbox" data-done="'+n.id+'" title="Mark done" aria-label="Mark done">' : "";
+  return '<div class="row" data-open="'+n.id+'">'+cb+'<span class="row-title'+(n.tags.indexOf("sample")>=0?" is-sample":"")+'">'+esc(n.title||"Untitled")+(opt.showProject&&n.project?' <span style="color:var(--ink-faint)">· '+esc(n.project)+'</span>':"")+'</span>'+meta+'</div>';
+}
+function panel(title, list, opt){
+  opt=opt||{}; var max=opt.max||5;
+  var rows = list.length ? list.slice(0,max).map(function(n){ return rowHTML(n,opt); }).join("") : '<div class="empty-line">'+esc(opt.empty||"Nothing here.")+'</div>';
+  var more = list.length>max ? '<div class="empty-line">+ '+(list.length-max)+' more</div>' : "";
+  return '<section class="panel'+(opt.cls?" "+opt.cls:"")+'"><div class="panel-head"><h3>'+esc(title)+'</h3><span class="n">'+list.length+'</span>'+(opt.btn||"")+'</div>'+(opt.sub?'<p class="sub">'+esc(opt.sub)+'</p>':"")+'<div class="rows">'+rows+more+'</div></section>';
+}
+function quickHTML(){
+  return '<div class="quick" role="group" aria-label="Quick capture">' +
+    '<button data-cap="note">'+ICON.note+'Note</button>' +
+    '<button data-cap="link">'+ICON.link+'Link</button>' +
+    '<button data-cap="image">'+ICON.image+'Photo</button>' +
+    '<button data-cap="shot">'+ICON.shot+'Screenshot</button>' +
+    '<button data-cap="record" class="rec">'+ICON.audio+'Record</button>' +
+    '<button data-cap="video">'+ICON.video+'Video</button>' +
+    '<button data-cap="file">'+ICON.file+'File</button>' +
+  '</div>';
+}
+
+function viewHome(){
+  var d = Engine.dashboard(), total = Engine.notes.length;
+  var pr = profile();
+  var html = '<div class="main-head"><div><h1 class="view-title">'+(pr.name ? esc(greeting()+", "+pr.name) : "Next steps")+'</h1><p class="view-hint">'+(pr.name ? "Here are your next steps — most urgent first. Atelier suggests, you decide." : "What needs you now, most urgent first. Atelier suggests — you decide.")+'</p></div>'+(pr.name?"":'<button class="btn sm ghost" data-menu="profile">Add your name</button>')+'</div>' + quickHTML();
+  if(total===0){
+    html += '<div class="empty"><p class="mono">An empty studio.</p><p>Capture the first thing — a detail, a decision, a WD condition, a link to read — and it lands in your Inbox. Sort it when you have a moment.</p><div class="actions"><button class="btn primary" data-cap="note"><span class="plus">+</span> Capture your first note</button><button class="btn" data-menu="sample">Load sample notes</button><button class="btn" data-menu="about">About Work Lab Atelier</button></div></div>';
+    return html + teaserHTML();
+  }
+  var oldest = d.inbox[0] ? Math.floor(ageDays(d.inbox[0].created)) : 0;
+  html += '<div class="dash">';
+  html += '<section class="panel wide inbox"><div class="panel-head"><span class="big-n">'+d.inbox.length+'</span><div><h3>In your Inbox</h3><span class="n">'+(d.inbox.length? "oldest "+(oldest<1?"today":oldest+" days ago") : "all sorted — nice")+'</span></div>'+(d.inbox.length?'<button class="btn sm primary" data-go="inbox">Sort Inbox</button>':"")+'</div></section>';
+  html += panel("To resolve", d.resolve, {cls:"hot", due:true, check:true, showProject:true, max:6, sub:"Deadlines and consequences — WD conditions, open issues, follow-ups.", empty:"Nothing waiting on you."});
+  html += panel("To decide", d.decide, {due:true, check:true, showProject:true, sub:"Judgment calls and client matters.", empty:"No open decisions."});
+  html += panel("Ready to distil", d.distil, {sub:"Filed, but no key points yet. Two minutes each.", empty:"Everything filed has its key points."});
+  html += panel("To explore", d.explore, {created:true, check:true, sub:"Read or try when there's time.", empty:"Reading list is clear."});
+  html += panel("Recent decisions", d.decisions, {project:true, sub:"Last 14 days.", empty:"No decisions recorded in the last two weeks."});
+  var projs = Engine.projects().filter(function(p){ return p.live>0; });
+  html += '<section class="panel"><div class="panel-head"><h3>Prepare</h3></div><p class="sub">Before a meeting, a proposal or a sign-off: one page on a project.</p>' +
+    (projs.length ? '<div class="prep"><select class="sel" id="prep-proj" aria-label="Project">'+projs.map(function(p){ return '<option>'+esc(p.code)+'</option>'; }).join("")+'</select><button class="btn sm primary" data-act="brief">Brief me</button></div>' : '<div class="empty-line">Link notes to a project code to get briefs.</div>') + '</section>';
+  if(d.quiet.length){
+    html += '<section class="panel"><div class="panel-head"><h3>Gone quiet</h3><span class="n">'+d.quiet.length+'</span></div><p class="sub">No activity for 60+ days. Archive to keep shelves clean.</p><div class="rows">' +
+      d.quiet.map(function(p){ return '<div class="row"><span class="row-title">'+esc(p.code)+'</span><span class="meta">'+esc(fmtDate(p.last))+'</span><button class="btn sm" data-act="archive-proj" data-proj="'+esc(p.code)+'">Archive</button></div>'; }).join("") + '</div></section>';
+  }
+  var lr = d.lastReview ? Math.floor(ageDays(d.lastReview)) : null;
+  html += '<section class="panel"><div class="panel-head"><h3>Weekly review</h3><button class="btn sm" data-go="review">Start review</button></div><p class="sub">'+(lr===null?"Not done yet. 15 minutes a week keeps Atelier useful.":"Last done "+(lr<1?"today":lr+" days ago")+".")+'</p><button class="btn sm ghost" data-menu="calendar">Add a Friday reminder to my calendar</button></section>';
+  html += '</div>' + teaserHTML();
+  return html;
+}
+function teaserHTML(){
+  return '<section class="panel teaser" style="margin-top:12px"><div style="color:var(--accent)">'+ICON.audio+'</div><div><span class="soon">Coming next</span><p class="lead">Yesterday\'s digest</p><p>Record the conversations that matter. Next morning, Atelier hands you the decisions, issues and actions — sorted by project, flagged where they collide. <a href="#" data-menu="roadmap">See what\'s coming →</a></p></div></section>';
+}
+
+function viewInbox(){
+  var list = Engine.query({para:"inbox", sort:"created"}).reverse();
+  var html = '<div class="main-head"><div><h1 class="view-title">Inbox</h1><p class="view-hint">'+esc(PARA.inbox.hint)+' Confirm the source, and Atelier suggests the rest.</p></div></div>';
+  html += '<div class="count-line">'+list.length+(list.length===1?" item":" items")+' to sort</div>';
+  if(!list.length) return html + '<div class="empty"><p class="mono">Inbox zero.</p><p>Everything is sorted onto its shelf. Capture anything new and it will wait here.</p><div class="actions"><button class="btn" data-go="home">Back to next steps</button></div></div>';
+  return html + '<div class="cards">' + list.map(function(n){ return cardHTML(n,{triage:true}); }).join("") + '</div>';
+}
+
+function viewLibrary(){
+  var title, hint;
+  if(S.project){ title=S.project; hint="Everything linked to this project."; }
+  else if(S.tag){ title="#"+S.tag; hint="Notes tagged “"+S.tag+"”."; }
+  else if(S.q && S.para==="all"){ title="Search"; hint="Across every shelf."; }
+  else if(S.para==="all"){ title="Everything"; hint="All notes, every shelf."; }
+  else { title=PARA[S.para].label; hint=PARA[S.para].hint; }
+  var shelf = S.project||S.tag ? "all" : S.para;
+  var list = Engine.query({para:shelf, project:S.project, tag:S.tag, folder:S.folder, q:S.q, sort:S.sort});
+  var fl = S.tag ? [] : Engine.folders(shelf, S.project);
+  var html = '<div class="main-head"><div><h1 class="view-title">'+esc(title)+'</h1><p class="view-hint">'+esc(hint)+'</p></div><div class="main-tools">' +
+    (S.project?'<button class="btn sm" data-act="brief-this">Brief me on '+esc(S.project)+'</button>':"") +
+    '<select class="sel" id="sort" aria-label="Sort"><option value="updated">Recently updated</option><option value="created">Recently added</option><option value="due">Due date</option><option value="title">Title A–Z</option></select></div></div>';
+  if(fl.length || S.folder){
+    html += '<div class="tags-wrap" style="padding:0;margin-top:14px" role="group" aria-label="Sub-folders"><button class="tag-chip'+(S.folder?"":" active")+'" data-folder="">All</button>' +
+      fl.map(function(f){ return '<button class="tag-chip'+(S.folder===f.name?" active":"")+'" data-folder="'+esc(f.name)+'">'+esc(f.name)+' · '+f.n+'</button>'; }).join("") + '</div>';
+  }
+  html += '<div class="count-line">'+list.length+(list.length===1?" note":" notes")+(S.folder?' in “'+esc(S.folder)+'”':"")+(S.q?' matching “'+esc(S.q)+'”':"")+'</div>';
+  if(!list.length) return html + '<div class="empty"><p class="mono">Nothing here yet.</p><p>No notes match this view. Try another shelf, clear the search, or capture something new.</p><div class="actions"><button class="btn primary" data-cap="note"><span class="plus">+</span> Capture a note</button></div></div>';
+  return html + '<div class="cards">' + list.map(function(n){ return cardHTML(n); }).join("") + '</div>';
+}
+
+function viewBrief(){
+  var projs = Engine.projects();
+  if(!S.briefCode && projs.length) S.briefCode = projs[0].code;
+  var b = Engine.brief(S.briefCode);
+  var html = '<div class="main-head"><div><h1 class="view-title">Brief: '+esc(S.briefCode||"—")+'</h1><p class="view-hint">One page before you walk in — preferences, open items, decisions, lessons.</p></div><div class="main-tools"><select class="sel" id="brief-proj" aria-label="Project">'+projs.map(function(p){ return '<option'+(p.code===S.briefCode?" selected":"")+'>'+esc(p.code)+'</option>'; }).join("")+'</select><button class="btn sm" data-act="print">Print / save PDF</button></div></div>';
+  if(!b.total) return html + '<div class="empty"><p class="mono">No notes for this project yet.</p><p>Give notes a project code and they will gather here.</p></div>';
+  function sec(t, list, empty){ return '<div class="brief-sec"><h3>'+esc(t)+' <span style="color:var(--ink-faint);font-weight:400">'+list.length+'</span></h3>' + (list.length ? '<div class="cards">'+list.map(function(n){ return cardHTML(n); }).join("")+'</div>' : '<div class="empty-line">'+esc(empty)+'</div>') + '</div>'; }
+  html += sec("Open — to resolve or decide", b.open, "Nothing open on this project.");
+  html += sec("Client preferences", b.prefs, "No client preferences recorded.");
+  if(b.pinned.length) html += sec("Pinned for the brief", b.pinned, "");
+  html += sec("Decisions", b.decisions, "No decisions recorded.");
+  html += sec("Lessons", b.lessons, "No lessons recorded.");
+  if(b.meetings.length) html += sec("Meetings", b.meetings, "");
+  if(b.other.length) html += sec("Other notes", b.other, "");
+  return html;
+}
+
+function viewReview(){
+  var d = Engine.dashboard();
+  var html = '<div class="main-head"><div><h1 class="view-title">Weekly review</h1><p class="view-hint">About 15 minutes. Empty the Inbox, distil what you filed, check what\'s open — then mark it done.</p></div><div class="main-tools"><button class="btn primary" data-act="finish-review">Finish review</button></div></div>';
+  html += '<div class="brief-sec"><h3>1 · Sort the Inbox <span style="color:var(--ink-faint);font-weight:400">'+d.inbox.length+'</span></h3>' + (d.inbox.length ? '<div class="cards">'+d.inbox.map(function(n){ return cardHTML(n,{triage:true}); }).join("")+'</div>' : '<div class="empty-line">Inbox is empty.</div>') + '</div>';
+  html += '<div class="brief-sec"><h3>2 · Distil what you filed <span style="color:var(--ink-faint);font-weight:400">'+d.distil.length+'</span></h3>' + (d.distil.length ? '<div class="cards">'+d.distil.slice(0,8).map(function(n){ return cardHTML(n); }).join("")+'</div>' : '<div class="empty-line">Everything filed has its key points.</div>') + '</div>';
+  html += '<div class="brief-sec"><h3>3 · Check what\'s open <span style="color:var(--ink-faint);font-weight:400">'+(d.resolve.length+d.decide.length)+'</span></h3><div class="dash">'+panel("To resolve", d.resolve, {due:true, check:true, showProject:true, max:10, empty:"Nothing to resolve."})+panel("To decide", d.decide, {due:true, check:true, showProject:true, max:10, empty:"Nothing to decide."})+'</div></div>';
+  return html;
+}
+
+function render(){
+  renderSidebar();
+  var m=$("#main"), html;
+  if(S.view==="inbox") html=viewInbox();
+  else if(S.view==="lib") html=viewLibrary();
+  else if(S.view==="brief") html=viewBrief();
+  else if(S.view==="review") html=viewReview();
+  else html=viewHome();
+  m.innerHTML = html;
+  var so=$("#sort"); if(so) so.value=S.sort;
+  hydrateThumbs(m);
+}
+function go(v){
+  S.project=""; S.tag=""; S.folder="";
+  if(v.indexOf("lib:")===0){ S.view="lib"; S.para=v.slice(4); }
+  else { S.view=v; }
+  closeNav(); render(); window.scrollTo(0,0);
+}
+
+/* =====================================================================
+   MODALS
+   ===================================================================== */
+var modalOnClose = null;
+function openModal(html, cls, onClose){ if(modalOnClose){ var prev=modalOnClose; modalOnClose=null; try{ prev(); }catch(e){} } var md=$("#modal"); md.className="modal"+(cls?" "+cls:""); md.innerHTML=html; $("#scrim").classList.add("open"); document.body.style.overflow="hidden"; modalOnClose=onClose||null; $("#scrim").scrollTop=0; }
+function closeModal(){ if(modalOnClose){ var f=modalOnClose; modalOnClose=null; try{ if(f()===false) return; }catch(e){} } $("#scrim").classList.remove("open"); document.body.style.overflow=""; $("#modal").innerHTML=""; }
+function head(t, sub){ return '<div class="modal-head"><h2>'+esc(t)+(sub?'<span class="step">'+esc(sub)+'</span>':"")+'</h2><button class="btn icon ghost" data-close aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>'; }
+
+/* ---------- note editor (capture, sort, edit, distil) ---------- */
+var E = null; // working copy
+function segHTML(id, opts, cur){
+  return '<div class="seg" id="'+id+'">'+opts.map(function(o){ return '<button type="button" data-v="'+o.v+'" style="--sw:'+(o.c||"var(--accent)")+'" aria-pressed="'+(o.v===cur)+'">'+(o.sw?'<span class="swatch" style="background:'+o.c+'"></span>':"")+esc(o.label)+'</button>'; }).join("")+'</div>';
+}
+function fieldsHTML(type, vals){
+  var t=TYPES[type]; if(!t || !t.fields.length) return "";
+  return t.fields.map(function(f){
+    var v=esc(vals[f.k]||""), id="f-"+f.k;
+    if(f.area) return '<div class="field"><label for="'+id+'">'+esc(f.label)+'</label><textarea id="'+id+'" data-fk="'+f.k+'">'+v+'</textarea></div>';
+    return '<div class="field"><label for="'+id+'">'+esc(f.label)+'</label><input type="'+(f.date?"date":"text")+'"'+(f.date?' required':'')+' id="'+id+'" data-fk="'+f.k+'" value="'+v+'"></div>';
+  }).join("");
+}
+function mediaHTML(n){
+  return n.attachments.map(function(a,i){
+    var el;
+    if(a.kind==="image") el='<img alt="" data-src="'+esc(a.path)+'">';
+    else if(a.kind==="audio") el='<audio controls preload="metadata" data-media="'+i+'" data-src-media="'+esc(a.path)+'"></audio>';
+    else if(a.kind==="video") el='<video controls playsinline preload="metadata" data-media="'+i+'" data-src-media="'+esc(a.path)+'"></video>';
+    else el='<div style="padding:14px 12px; display:flex; gap:10px; align-items:center">'+ICON.file+'<span>'+esc(a.name)+'</span><button class="btn sm" data-act="open-att" data-path="'+esc(a.path)+'" style="margin-left:auto">Open</button></div>';
+    var marks = (n.marks.length && (a.kind==="audio"||a.kind==="video")) ? '<div class="marks">'+n.marks.map(function(m){ return '<button class="mark-btn" data-seek="'+m.t+'" data-mi="'+i+'">★ '+fmtClock(m.t)+(m.label&&m.label!=="Important"?" · "+esc(m.label):"")+'</button>'; }).join("")+'</div>' : "";
+    var tools = (a.kind==="audio"||a.kind==="video") ? '<button class="btn sm ghost" data-act="stamp" data-mi="'+i+'">Add timestamp to note</button>' : "";
+    return '<div class="media">'+el+marks+'<div class="media-meta"><span>'+esc(a.name)+'</span><span>'+esc(fmtSize(a.size))+'</span>'+(a.sha256?'<span class="fp" title="SHA-256 fingerprint of the original file: '+esc(a.sha256)+'">fingerprint '+esc(a.sha256.slice(0,12))+'…</span>':'')+tools+'</div></div>';
+  }).join("");
+}
+function openEditor(note, isNew){
+  E = normalize(JSON.parse(JSON.stringify(note)));
+  E._isNew = !!isNew;
+  var inInbox = E.para==="inbox";
+  var projs = Engine.projects().map(function(p){ return '<option value="'+esc(p.code)+'">'; }).join("");
+  var paraOpts = PARA_ORDER.map(function(p){ return {v:p, label:PARA[p].one, c:paraColor(p), sw:true}; });
+  var nextOpts = NEXT_ORDER.map(function(k){ return {v:k, label:NEXT[k].label, c:"var(--n-"+k+")"}; });
+  var act = actOf(E.action);
+  var html = head(isNew?"Capture":(inInbox?"Sort":"Note"), isNew?"into your Inbox":(inInbox?"confirm the source — Atelier suggests the rest":"edit, act & distil")) + '<div class="modal-body">';
+  if(E.attachments.length) html += mediaHTML(E);
+  if(E.kind==="audio" && (E.attendees || E.consent)) html += '<div class="suggest">'+(E.attendees?'<b>Attendees:</b> '+esc(E.attendees)+' · ':"")+(E.consent?'Recorded with participants informed.':"")+'</div>';
+  html += '<div class="field"><label for="e-title">Title</label><input type="text" id="e-title" value="'+esc(E.title)+'" placeholder="A detail, a decision, a condition, a lesson…"></div>';
+  if(E.kind==="link" || E.url) html += '<div class="field"><label for="e-url">Link</label><input type="url" id="e-url" value="'+esc(E.url)+'" placeholder="https://…"></div>';
+  html += '<div class="field"><label for="e-body">Note <span class="note">— capture it raw; tidy later</span></label><textarea id="e-body" placeholder="What you want to remember, in whatever form it arrives.">'+esc(E.body)+'</textarea></div>';
+
+  html += '<div class="step-box"><p class="step-title">Source and next step</p>' +
+    '<div class="field"><label for="e-source">Where did it come from? <span class="note">— S, confirmed by you</span></label><select id="e-source"><option value="">Choose a source…</option>'+SOURCES.map(function(s){ return '<option value="'+s.v+'"'+(E.source===s.v?" selected":"")+'>'+esc(s.label)+'</option>'; }).join("")+'</select><div class="suggest" id="e-suggest"></div></div>' +
+    '<div class="field"><label for="e-action">Follow-up action</label><select id="e-action"><option value="">Choose an action…</option>'+ACTIONS.map(function(a){ return '<option value="'+a.v+'"'+(E.action===a.v?" selected":"")+'>'+esc(a.label)+'</option>'; }).join("")+'</select>' +
+      '<div id="e-other-wrap"'+(E.action==="other"?"":" hidden")+' style="margin-top:8px"><input type="text" id="e-actionNote" value="'+esc(E.actionNote)+'" placeholder="Describe the action you need…"></div>' +
+      '<div class="unavail" id="e-unavail"'+(act&&(act.unavailable||act.other)?"":" hidden")+'>'+esc(act&&act.unavailable?act.unavailable+" "+NOT_AVAILABLE:NOT_AVAILABLE)+'</div></div>' +
+    '<div class="field"><span class="lbl">Next step</span>'+segHTML("e-next", nextOpts, E.next)+'</div>' +
+    '<div class="two"><div class="field"><label for="e-due">Due date <span class="note">— optional</span></label><input type="date" id="e-due" required value="'+esc(E.due)+'"></div>' +
+    '<div class="field"><span class="lbl">&nbsp;</span><label class="check"><input type="checkbox" id="e-done"'+(E.done?" checked":"")+'> Done</label></div></div>' +
+  '</div>';
+
+  html += '<div class="field"><span class="lbl">Shelf</span>'+segHTML("e-para", paraOpts, E.para)+'</div>';
+  html += '<div class="two"><div class="field"><label for="e-project">Project code <span class="note">— e.g. 22 JSB</span></label><input type="text" id="e-project" list="proj-dl" value="'+esc(E.project)+'"><datalist id="proj-dl">'+projs+'</datalist></div>' +
+          '<div class="field"><label for="e-type">Template</label><select id="e-type">'+TYPE_ORDER.map(function(t){ return '<option value="'+t+'"'+(E.type===t?" selected":"")+'>'+esc(TYPES[t].label)+'</option>'; }).join("")+'</select></div></div>';
+  var allFolders = Engine.folders("all").map(function(f){ return '<option value="'+esc(f.name)+'">'; }).join("");
+  html += '<div class="field"><label for="e-folder">Sub-folder <span class="note">— optional, one level: e.g. Details, Frontier tech, WD. Type a new name to create it.</span></label><input type="text" id="e-folder" list="folder-dl" value="'+esc(E.folder)+'"><datalist id="folder-dl">'+allFolders+'</datalist></div>';
+  html += '<div id="e-fields" style="display:flex;flex-direction:column;gap:12px">'+fieldsHTML(E.type, E.fields)+'</div>';
+
+  html += '<details class="more"'+(E.tags.length||E.sourceRef?" open":"")+'><summary>Tags, source record & sharing</summary><div class="inner">' +
+    '<div class="field"><label for="e-tags">Tags <span class="note">— comma separated</span></label><input type="text" id="e-tags" value="'+esc(E.tags.join(", "))+'" placeholder="waterproofing, detailing, lesson"></div>' +
+    '<div class="field"><label for="e-sourceRef">Source record <span class="note">— where the original lives: email, WD file path, RFI no.</span></label><input type="text" id="e-sourceRef" value="'+esc(E.sourceRef)+'" placeholder="e.g. \\\\NAS\\Projects\\22 JSB\\WD\\WD-03.pdf"></div>' +
+    '<div class="field"><span class="lbl">Visibility</span>'+segHTML("e-vis", [{v:"private",label:"Private — only me"},{v:"shared",label:"Shared — may join the firm hub later"}], E.visibility)+'</div>' +
+    '<label class="check"><input type="checkbox" id="e-pinned"'+(E.pinned?" checked":"")+'> Pin to the project brief</label>' +
+  '</div></details>';
+
+  html += '<div class="field"><label for="e-distil">Key points <span class="note">— the one or two things worth remembering, in your own words</span></label><textarea id="e-distil" class="distil" placeholder="Leave blank until you\'ve thought it through.">'+esc(E.distilled)+'</textarea></div>';
+  html += '</div><div class="modal-foot">' + (isNew?"":'<button class="btn sm ghost danger" data-act="delete">Delete</button>') + '<span class="spacer"></span>' + (E.url?'<a class="btn sm ghost" href="'+esc(E.url)+'" target="_blank" rel="noopener">Open link ↗</a>':"") + '<button class="btn" data-close>Cancel</button><button class="btn primary" data-act="save">'+(isNew?"Save to Inbox":"Save")+'</button></div>';
+
+  openModal(html, "", null);
+  hydrateThumbs($("#modal"));
+  $$("[data-src-media]", $("#modal")).forEach(function(el){ Engine.blobURL(el.getAttribute("data-src-media")).then(function(u){ if(u) el.src=u; }); });
+  wireEditor();
+  updateSuggest(false);
+  setTimeout(function(){ var t=$("#e-title"); if(t && !t.value) t.focus(); }, 40);
+}
+function setSeg(id, v){ $$("#"+id+" button").forEach(function(b){ b.setAttribute("aria-pressed", b.getAttribute("data-v")===v?"true":"false"); }); }
+function segVal(id){ var b=$("#"+id+" button[aria-pressed=true]"); return b?b.getAttribute("data-v"):""; }
+function readFields(){ var o={}; $$("#e-fields [data-fk]").forEach(function(el){ if(el.value) o[el.getAttribute("data-fk")]=el.value; }); return o; }
+function updateSuggest(apply){
+  var s = srcOf($("#e-source").value), box=$("#e-suggest");
+  if(!s || !s.next){ box.innerHTML = s ? "No suggestion for “Other” — set the next step yourself." : "Pick a source and Atelier will suggest the next step."; return; }
+  var a=actOf(s.action);
+  box.innerHTML = "Atelier suggests: <b>"+esc(a?a.label:"")+"</b> · next step <b>"+esc(NEXT[s.next].label)+"</b> · shelf <b>"+esc(PARA[s.para].one)+"</b>"+(s.type&&s.type!=="note"?" · template <b>"+esc(TYPES[s.type].label)+"</b>":"")+". Change anything that's wrong.";
+  if(apply){
+    $("#e-action").value = s.action; onActionChange(false);
+    setSeg("e-next", s.next);
+    if(segVal("e-para")==="inbox") setSeg("e-para", s.para);
+    if(s.type && $("#e-type").value==="note"){ $("#e-type").value=s.type; $("#e-fields").innerHTML=fieldsHTML(s.type, readFields()); }
+  }
+}
+function onActionChange(applyNext){
+  var a = actOf($("#e-action").value);
+  $("#e-other-wrap").hidden = !(a && a.other);
+  var u=$("#e-unavail");
+  if(a && (a.unavailable || a.other)){ u.hidden=false; u.textContent = a.unavailable ? a.unavailable+" "+NOT_AVAILABLE : NOT_AVAILABLE; } else u.hidden=true;
+  if(applyNext!==false && a){
+    if(a.next) setSeg("e-next", a.next);
+    if(a.type && $("#e-type").value!==a.type){ var keep=readFields(); $("#e-type").value=a.type; $("#e-fields").innerHTML=fieldsHTML(a.type, keep); }
+    if(a.pin) $("#e-pinned").checked=true;
+  }
+}
+function wireEditor(){
+  $("#e-source").addEventListener("change", function(){ updateSuggest(true); });
+  $("#e-action").addEventListener("change", function(){ onActionChange(true); });
+  $("#e-type").addEventListener("change", function(){ $("#e-fields").innerHTML=fieldsHTML($("#e-type").value, readFields()); });
+  ["e-next","e-para","e-vis"].forEach(function(id){ $$("#"+id+" button").forEach(function(b){ b.addEventListener("click", function(){ setSeg(id, b.getAttribute("data-v")); }); }); });
+}
+async function saveEditor(){
+  var title=$("#e-title").value.trim(), body=$("#e-body").value.trim(), url=$("#e-url")?$("#e-url").value.trim():E.url;
+  if(!title && !body && !url && !E.attachments.length){ toast("Add a title, a note or a link first."); $("#e-title").focus(); return; }
+  var para = segVal("e-para") || "inbox", project=$("#e-project").value.trim();
+  if(para==="project" && !project){ toast("Give it a project code to file under Projects."); $("#e-project").focus(); return; }
+  var action=$("#e-action").value, a=actOf(action), actionNote=$("#e-actionNote").value.trim();
+  if(a && a.other && !actionNote){ toast("Describe the action you need."); $("#e-actionNote").focus(); return; }
+  var n = Object.assign({}, E, {
+    title: title || (url ? url.replace(/^https?:\/\//,"").slice(0,60) : (body.split("\n")[0].slice(0,60) || "Untitled")),
+    body: body, url: url, para: para, project: project, folder: safeName($("#e-folder").value),
+    source: $("#e-source").value, action: action, actionNote: a&&a.other?actionNote:"",
+    next: segVal("e-next"), due: $("#e-due").value, done: $("#e-done").checked,
+    type: $("#e-type").value, fields: readFields(),
+    tags: $("#e-tags").value.split(",").map(function(s){ return s.trim(); }).filter(Boolean).filter(function(v,i,arr){ return arr.indexOf(v)===i; }),
+    sourceRef: $("#e-sourceRef").value.trim(), visibility: segVal("e-vis")||"private", pinned: $("#e-pinned").checked,
+    distilled: $("#e-distil").value.trim()
+  });
+  if(n.kind==="note" && url) n.kind="link";
+  var reply = "";
+  var prevAct = E._isNew ? "" : ((Engine.get(E.id)||{}).action||"");
+  var prevNote = E._isNew ? "" : ((Engine.get(E.id)||{}).actionNote||"");
+  if(a && (a.unavailable || a.other) && (action!==prevAct || n.actionNote!==prevNote)){
+    var reqs = (Engine.meta.requests||[]).slice();
+    reqs.push({date: nowISO(), action: a.label, request: a.other ? n.actionNote : a.label, note: n.title, source: n.source});
+    await Engine.setMeta("requests", reqs);
+    track("request", {request: a.other ? n.actionNote : a.label, source: n.source});
+    reply = NOT_AVAILABLE;
+  }
+  if(E._isNew) track("capture", {kind:n.kind, type:n.type});
+  else if(E.para==="inbox" && para!=="inbox") track("sort", {shelf:para, source:n.source, next:n.next, type:n.type});
+  if(!E.distilled && n.distilled) track("distil", {type:n.type});
+  if(!E.done && n.done) track("done", {next:n.next});
+  delete n._isNew;
+  await Engine.save(n);
+  closeModal(); render();
+  if(reply) showNotice(reply, a.unavailable || "Your request: “"+n.actionNote+"”. It's in “Requests I've made” and helps decide what Atelier does next.");
+  else toast(E._isNew ? "Captured to Inbox." : (para!=="inbox" && E.para==="inbox" ? "Sorted to "+PARA[para].one+"." : "Saved."));
+}
+function showNotice(title, text){
+  openModal(head("Noted") + '<div class="modal-body prose"><p class="lead" style="font-size:18px">'+esc(title)+'</p><p>'+esc(text)+'</p></div><div class="modal-foot"><span class="spacer"></span><button class="btn primary" data-close>OK</button></div>', "narrow");
+}
+
+/* ---------- capture sources ---------- */
+function newNote(extra){ return normalize(Object.assign({para:"inbox", kind:"note"}, extra||{})); }
+async function ingestFiles(files, titlePrefix){
+  if(gateShown()) return;
+  files = Array.prototype.slice.call(files||[]); if(!files.length) return;
+  var made=[];
+  for(var i=0;i<files.length;i++){
+    var f=files[i], kind=kindOfMime(f.type);
+    var n=newNote({kind:kind, title: titlePrefix ? titlePrefix+" "+new Date().toLocaleString() : stripExt(f.name)});
+    await Engine.attach(n, f, f.name || (kind+"-"+Date.now()));
+    made.push(await Engine.save(n)); track("capture", {kind:kind, type:"note"});
+  }
+  render();
+  if(made.length===1) openEditor(made[0], false);
+  else toast(made.length+" items added to your Inbox.");
+}
+function capture(kind){
+  if(gateShown()) return;
+  if(kind==="note") return openEditor(newNote(), true);
+  if(kind==="link") return openEditor(newNote({kind:"link", next:"explore"}), true);
+  if(kind==="image") return $("#pick-image").click();
+  if(kind==="video") return $("#pick-video").click();
+  if(kind==="file") return $("#pick-file").click();
+  if(kind==="record") return openRecorder();
+  if(kind==="shot") return openModal(head("Screenshot") + '<div class="modal-body prose"><p class="lead" style="font-size:18px">Paste it straight in.</p><p>Take a screenshot as usual (Windows: <b>Win + Shift + S</b> · Mac: <b>Cmd + Ctrl + Shift + 4</b>), then press <b>Ctrl/Cmd + V</b> anywhere in Atelier. It lands in your Inbox.</p><p>You can also drag image files onto the page.</p></div><div class="modal-foot"><span class="spacer"></span><button class="btn" data-cap="image">Choose an image instead</button><button class="btn primary" data-close>Got it</button></div>', "narrow");
+}
+
+/* ---------- meeting recorder (record on request) ---------- */
+var R = null;
+function openRecorder(){
+  var canRec = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
+  var projs = Engine.projects().map(function(p){ return '<option value="'+esc(p.code)+'">'; }).join("");
+  var html = head("Record a conversation", "on request — never always-on") + '<div class="modal-body">' +
+    (canRec ? "" : '<div class="banner" style="margin:0">Recording isn\'t available in this view. It works in the hosted version of Atelier in a modern browser. You can still add a recording you already have as a file.</div>') +
+    '<div class="field"><label for="r-title">What is it?</label><input type="text" id="r-title" placeholder="Site meeting with contractor, client call…"></div>' +
+    '<div class="two"><div class="field"><label for="r-project">Project code</label><input type="text" id="r-project" list="r-dl"><datalist id="r-dl">'+projs+'</datalist></div>' +
+    '<div class="field"><label for="r-att">Attendees</label><input type="text" id="r-att" placeholder="Names or roles"></div></div>' +
+    '<label class="check"><input type="checkbox" id="r-consent"> Everyone in this conversation knows it is being recorded and has agreed.</label>' +
+    '<div class="rec-face"><div class="rec-time" id="r-time">00:00</div><div class="rec-live" id="r-live" hidden><i></i>Recording</div>' +
+    '<button class="rec-btn" id="r-btn" aria-label="Start recording"'+(canRec?"":" disabled")+'><span></span></button>' +
+    '<button class="btn star-btn" id="r-star" disabled>★ Mark this moment</button>' +
+    '<div class="suggest" id="r-marks">Tap ★ whenever something important is said — the moment is timestamped.</div></div>' +
+  '</div><div class="modal-foot"><span class="suggest">The original file is kept intact and fingerprinted.</span><span class="spacer"></span><button class="btn" data-close>Close</button></div>';
+  openModal(html, "narrow", function(){ if(R && R.mr && R.mr.state==="recording"){ if(!confirm("Stop and discard this recording?")) return false; R.discard=true; R.mr.stop(); } return true; });
+  R = {marks:[], chunks:[]};
+  $("#r-btn").addEventListener("click", function(){ if(R.mr && R.mr.state==="recording") stopRec(); else startRec(); });
+  $("#r-star").addEventListener("click", function(){ if(!R.mr) return; var t=(Date.now()-R.start)/1000; R.marks.push({t:Math.round(t), label:"Important"}); $("#r-marks").textContent = R.marks.length+" moment"+(R.marks.length>1?"s":"")+" marked · last at "+fmtClock(t); });
+}
+async function startRec(){
+  if(!$("#r-consent").checked){ toast("Confirm that everyone knows it's being recorded."); return; }
+  try{
+    R.stream = await navigator.mediaDevices.getUserMedia({audio:true});
+  }catch(e){ toast("Microphone not available or permission declined."); return; }
+  var types=["audio/mp4","audio/webm;codecs=opus","audio/webm","audio/ogg"], mime="";
+  for(var i=0;i<types.length;i++){ if(MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(types[i])){ mime=types[i]; break; } }
+  try{ R.mr = mime ? new MediaRecorder(R.stream,{mimeType:mime}) : new MediaRecorder(R.stream); }catch(e){ toast("Recording isn't supported in this browser."); return; }
+  R.mime = R.mr.mimeType || mime || "audio/webm"; R.chunks=[]; R.marks=[]; R.start=Date.now();
+  R.mr.ondataavailable = function(ev){ if(ev.data && ev.data.size) R.chunks.push(ev.data); };
+  R.mr.onstop = finishRec;
+  R.mr.start(1000);
+  $("#r-btn").classList.add("on"); $("#r-btn").setAttribute("aria-label","Stop recording");
+  $("#r-live").hidden=false; $("#r-star").disabled=false;
+  R.timer = setInterval(function(){ $("#r-time").textContent = fmtClock((Date.now()-R.start)/1000); }, 500);
+}
+function stopRec(){ if(R && R.mr && R.mr.state!=="inactive") R.mr.stop(); }
+async function finishRec(){
+  clearInterval(R.timer);
+  if(R.stream) R.stream.getTracks().forEach(function(t){ t.stop(); });
+  if(R.discard){ R=null; return; }
+  var blob = new Blob(R.chunks, {type:R.mime});
+  var ext = R.mime.indexOf("mp4")>=0 ? "m4a" : (R.mime.indexOf("ogg")>=0 ? "ogg" : "webm");
+  var title = $("#r-title").value.trim() || "Recording "+new Date().toLocaleString();
+  var n = newNote({kind:"audio", type:"meeting", title:title, project:$("#r-project").value.trim(), attendees:$("#r-att").value.trim(), consent:true, marks:R.marks.slice()});
+  var stamp = new Date().toISOString().slice(0,16).replace(/[:T]/g,"-");
+  await Engine.attach(n, blob, "recording-"+stamp+"."+ext);
+  n = await Engine.save(n);
+  track("record", {seconds:Math.round((Date.now()-R.start)/1000), marks:R.marks.length}); R=null; modalOnClose=null; closeModal(); render();
+  toast("Recording saved to your Inbox.");
+  openEditor(n, false);
+}
+
+/* ---------- info panels ---------- */
+function openAbout(){
+  var askName = !profile().name;
+  openModal(head("Work Lab Atelier") + '<div class="modal-body prose">' +
+    (askName ? '<div class="step-box" style="margin-bottom:6px"><p class="step-title">Welcome — first, what should Atelier call you?</p>' + nameFieldsHTML({}) + '<p class="suggest" style="margin:0">Kept on this device only. There is no account to create.</p></div>' : "") +
+    '<p class="lead">A knowledge-first studio for architects — it captures what you learn and turns it into your next steps.</p>' +
+    '<p class="tagline">Know it. Find it. Act when it counts.</p>' +
+    '<p>Atelier gathers what an architect learns every day — details, decisions, WD conditions, client preferences, lessons — and surfaces the actions that knowledge calls for: what to sort, what to resolve, what to prepare before the next meeting. A new-tool advert and a WD from BCA both get the right next step; the WD rises to the top, the advert waits quietly.</p>' +
+    '<h3>For key management</h3><p>In most practices the most valuable knowledge lives in one or two senior heads — and walks out the door with them. Atelier captures that judgment as it forms and makes it a firm asset. Its biggest payoff is when you <b>prepare</b>: a fee proposal, a client meeting, a QP sign-off, a talk.</p>' +
+    '<h3>How to use it</h3><dl class="rhythm">' +
+      '<dt>In the moment</dt><dd>Something worth keeping happens — capture it.</dd><dd class="t">10 sec</dd>' +
+      '<dt>Event-driven</dt><dd>A WD arrives, a design change is approved — log it with a due date.</dd><dd class="t">1–2 min</dd>' +
+      '<dt>Daily glance</dt><dd>End of day: check Next steps.</dd><dd class="t">2–5 min</dd>' +
+      '<dt>Before key moments</dt><dd>Brief me: preferences, open items, decisions, lessons.</dd><dd class="t">2–5 min</dd>' +
+      '<dt>Weekly review</dt><dd>Friday: empty the Inbox, distil, archive quiet projects.</dd><dd class="t">15 min</dd>' +
+    '</dl>' +
+    '<h3>What the firm gains</h3><ul><li>Institutional memory that survives turnover and succession.</li><li>Faster onboarding — new staff learn the firm\'s way from its own knowledge.</li><li>Fewer repeated mistakes; decisions traceable to their source.</li><li>A foundation: as the practice grows, the principal\'s Atelier can seed a firm-wide knowledge base.</li></ul>' +
+    '<h3>What the principal gains</h3><ul><li>Your expertise becomes leverage, not a bottleneck.</li><li>Walk into every meeting prepared, in two minutes.</li><li>A defensible record of what was decided, when and why.</li></ul>' +
+    '<h3>Yours, on-prem</h3><p>Notes are plain files in a folder you own — no cloud, no lock-in, readable in twenty years. Nothing leaves your device unless you move it. Install it as an app (⋯ menu) and it opens even with no signal on site.</p>' +
+  '</div><div class="modal-foot"><button class="btn ghost" data-menu="roadmap">What\'s coming</button><span class="spacer"></span><button class="btn primary" data-act="start">'+(askName?"Save and start":"Start capturing")+'</button></div>', "", function(){ Engine.setMeta("seenWelcome", true); storeNameFields().then(function(saved){ if(saved){ render(); } }); return true; });
+}
+function openRoadmap(){
+  function it(t,d){ return '<div class="item"><b>'+esc(t)+'</b><span>'+esc(d)+'</span></div>'; }
+  openModal(head("What's coming") + '<div class="modal-body prose">' +
+    '<p class="lead" style="font-size:19px">Atelier v1 is the foundation. Here is where it\'s heading.</p><p>Everything runs on-prem by default. Tell us what matters most to you — use “Other — request an action…” on any note.</p>' +
+    '<div class="stage">Next</div><div class="road">' +
+      it("Yesterday's digest", "Record the conversations that matter. Next morning, Atelier hands you the decisions, issues and actions — by project, with cross-project flags (an MEP issue raised in another meeting lands on the right job).") +
+      it("Meeting minutes & mind maps", "Recordings transcribed on your own PC, drafted into minutes — decisions, actions, open issues — with a mind map. You approve before anything is filed.") +
+      it("Image understanding", "Photos and screenshots described, tagged and searchable by what's in them; text read from drawings and labels; find similar. Local engine by default (e.g. Gemma 3); Gemini or others optional, for public material only.") +
+      it("Voice notes", "Say the lesson in thirty seconds after a meeting — Atelier files it.") +
+      it("Office sync hub", "Phone and desktop share one Atelier through a small on-prem server in your office — no cloud.") +
+    '</div><div class="stage">Later</div><div class="road">' +
+      it("Video understanding", "Site walkthroughs, mock-up reviews and webinars summarised with timestamps.") +
+      it("Telegram capture", "Forward non-sensitive items to an Atelier bot; they land in your Inbox.") +
+      it("Firm-wide knowledge base", "Several architects' Atelier folders combine into one practice knowledge base. Only notes marked “Shared” are included.") +
+    '</div></div><div class="modal-foot"><span class="spacer"></span><button class="btn primary" data-close>Close</button></div>');
+}
+function openStorage(){
+  var supported = "showDirectoryPicker" in window;
+  var isFolder = Engine.adapter.kind==="folder";
+  openModal(head("Where your notes are stored") + '<div class="modal-body prose">' +
+    (isFolder ? '<p class="lead" style="font-size:18px">Folder: '+esc(Engine.adapter.label)+'</p><p>This folder is your single source of truth. Every note is a Markdown file, sorted into <b>00 Inbox</b>, <b>01 Projects</b>, <b>02 Areas</b>, <b>03 Resources</b> and <b>04 Archive</b>; photos, recordings and files sit in <b>_attachments</b>. Add sub-folders inside any shelf (one level) — from a note\'s Sub-folder field, or straight in Explorer/Finder; where a file sits is what Atelier believes. Back it up with the rest of your NAS. Another app that reads Markdown (e.g. Obsidian) can open the same folder.</p>' :
+      '<p class="lead" style="font-size:18px">'+(Engine.adapter.kind==="memory"?"Temporary — notes are not being saved":"In this browser")+'</p><p>Notes are kept on this device'+(Engine.adapter.kind==="memory"?" only for this session":"")+'. For a single source of truth you own, connect a folder — on your PC or office NAS. Atelier creates the shelves inside it and writes every note as a plain Markdown file.</p>' +
+      (supported ? '' : '<p><b>Folder mode needs Chrome or Edge on a desktop</b>, on the hosted version of Atelier. On this device, notes stay in the browser — export a backup regularly.</p>')) +
+    '<h3>Plug-in ready</h3><p>Every note carries a stable ID, a schema version, a project code and a private/shared flag, so the same folder can later feed a firm-wide knowledge base without migration.</p>' +
+  '</div><div class="modal-foot">' + (isFolder ? '<button class="btn ghost" data-act="disconnect">Switch back to this browser</button>' : "") + '<span class="spacer"></span>' +
+    (supported ? '<button class="btn primary" data-act="connect">'+(isFolder?"Choose a different folder":"Connect a folder")+'</button>' : '<button class="btn primary" data-close>OK</button>') + '</div>', "narrow");
+}
+function openRequests(){
+  var reqs = Engine.meta.requests || [];
+  openModal(head("Requests I've made", "options not available yet") + '<div class="modal-body prose">' +
+    (reqs.length ? '<p>Each time you pick an action that isn\'t available yet, it\'s logged here. During the pilot these are also sent to the Atelier team automatically. They decide what gets built next.</p><div class="rows">' + reqs.slice().reverse().map(function(r){ return '<div class="row" style="cursor:default"><span class="row-title">'+esc(r.request)+' <span style="color:var(--ink-faint)">· on “'+esc(r.note)+'”</span></span><span class="meta">'+esc(fmtDate(r.date))+'</span></div>'; }).join("") + '</div>'
+      : '<p>No requests yet. When you need an action Atelier doesn\'t offer, choose <b>Other — request an action…</b> in a note\'s follow-up action. You\'ll get a reply, and the request is logged here.</p>') +
+  '</div><div class="modal-foot"><span class="spacer"></span>'+(reqs.length?'<button class="btn" data-act="export-requests">Export as CSV</button>':"")+'<button class="btn primary" data-close>Close</button></div>', "narrow");
+}
+
+/* ---------- folder connect / migrate ---------- */
+async function connectFolder(){
+  var handle;
+  try{ handle = await window.showDirectoryPicker({mode:"readwrite", id:"atelier"}); }
+  catch(e){ if(e && e.name==="AbortError") return; toast("Folders can't be opened from this view. Use the hosted version in Chrome or Edge."); return; }
+  try{
+    var fa = new FolderAdapter(handle); await fa.init();
+    var existing = await fa.list();
+    var here = Engine.notes.length, wasFolder = Engine.adapter.kind==="folder";
+    if(here && !wasFolder && confirm("Copy your "+here+" note"+(here>1?"s":"")+" from this browser into “"+handle.name+"”?\n\nThe folder already has "+existing.length+". Copies keep their IDs, so nothing is duplicated.")){
+      for(var i=0;i<Engine.notes.length;i++){
+        var n=Engine.notes[i];
+        for(var j=0;j<n.attachments.length;j++){ var b=await Engine.adapter.getBlob(n.attachments[j].path); if(b) await fa.putBlob(n.attachments[j].path, b); }
+        await fa.put(n);
+      }
+      var m = Object.assign({}, await fa.getMeta(), Engine.meta); await fa.setMeta(m);
+    }
+    if(idbHandle) await idbDo(idbHandle,"kv","readwrite",function(s){ return s.put(handle,"folderHandle"); });
+    Engine.adapter = fa; await Engine.load();
+    $("#reconnect").hidden = true;
+    track("folder", {}); closeModal(); render(); toast("Atelier is now using the folder “"+handle.name+"”.");
+  }catch(e){ toast("Couldn't use that folder: "+(e && e.message ? e.message : "unknown error")); }
+}
+async function disconnectFolder(){
+  if(!confirm("Switch back to this browser's copy? Your folder stays untouched on disk.")) return;
+  if(idbHandle) await idbDo(idbHandle,"kv","readwrite",function(s){ return s.delete("folderHandle"); });
+  Engine.adapter = browserAdapter || new MemoryAdapter(); await Engine.load();
+  closeModal(); render(); toast("Using this browser's copy.");
+}
+async function reconnectFolder(){
+  try{
+    var h = await idbDo(idbHandle,"kv","readonly",function(s){ return s.get("folderHandle"); });
+    if(!h) return;
+    var p = await h.requestPermission({mode:"readwrite"});
+    if(p!=="granted"){ toast("Permission not granted."); return; }
+    var fa=new FolderAdapter(h); await fa.init(); Engine.adapter=fa; await Engine.load();
+    $("#reconnect").hidden=true; render(); toast("Reconnected to “"+h.name+"”.");
+  }catch(e){ toast("Couldn't reconnect the folder."); }
+}
+
+/* ---------- export / import / calendar / samples ---------- */
+async function exportBackup(){
+  var blobs={}, total=0, skipped=0;
+  for(var i=0;i<Engine.notes.length;i++){
+    var atts=Engine.notes[i].attachments;
+    for(var j=0;j<atts.length;j++){
+      if(total+(atts[j].size||0) > 80*1048576){ skipped++; continue; }
+      var b = await Engine.adapter.getBlob(atts[j].path); if(!b){ continue; }
+      total += b.size;
+      blobs[atts[j].path] = await new Promise(function(res){ var r=new FileReader(); r.onload=function(){ res(r.result); }; r.readAsDataURL(b); });
+    }
+  }
+  var data = {app:"atelier", schema:SCHEMA, exported:nowISO(), notes:Engine.notes, meta:Engine.meta, blobs:blobs};
+  var ok = await offerFile("atelier-backup-"+today()+".json", JSON.stringify(data), "application/json");
+  if(ok) track("export", {});
+  if(ok && skipped) toast(skipped+" large attachment(s) left out of the backup — they stay in your folder.");
+}
+async function importBackup(file){
+  try{
+    var data = JSON.parse(await file.text());
+    var notes = (data.notes||data.items||[]);
+    if(!confirm("Import "+notes.length+" notes? Notes with the same ID are updated; others are added.")) return;
+    var blobs=data.blobs||{};
+    for(var p in blobs){ if(Object.prototype.hasOwnProperty.call(blobs,p)){ var b = await (await fetch(blobs[p])).blob(); await Engine.adapter.putBlob(p, b); } }
+    for(var i=0;i<notes.length;i++){
+      var n=notes[i];
+      if(!n.para && n.para!=="inbox" && !PARA[n.para]) n.para="inbox";
+      await Engine.save(normalize(n), true);
+    }
+    if(data.meta && data.meta.requests){ var r=(Engine.meta.requests||[]).concat(data.meta.requests); await Engine.setMeta("requests", r); }
+    render(); toast("Imported "+notes.length+" notes.");
+  }catch(e){ toast("That file couldn't be read as an Atelier backup."); }
+}
+function calendarFile(){
+  var d=new Date(); var add=(5-d.getDay()+7)%7; if(add===0 && d.getHours()>=16) add=7; d.setDate(d.getDate()+add);
+  var ds = d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0");
+  var ics = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//WLA//Atelier//EN","BEGIN:VEVENT","UID:atelier-weekly-review-"+Date.now()+"@atelier","DTSTAMP:"+nowISO().replace(/[-:]/g,"").slice(0,15)+"Z","DTSTART:"+ds+"T160000","DURATION:PT15M","RRULE:FREQ=WEEKLY;BYDAY=FR","SUMMARY:Atelier weekly review","DESCRIPTION:15 minutes: empty the Inbox, distil what you filed, check what's open.","END:VEVENT","END:VCALENDAR"].join("\r\n");
+  return offerFile("atelier-weekly-review.ics", ics, "text/calendar");
+}
+function exportRequests(){
+  var reqs=Engine.meta.requests||[];
+  var csv=[["date","requested action","on note","source"]].concat(reqs.map(function(r){ return [r.date, r.request, r.note, r.source||""]; }))
+    .map(function(row){ return row.map(function(c){ return '"'+String(c==null?"":c).replace(/"/g,'""')+'"'; }).join(","); }).join("\n");
+  offerFile("atelier-requests-"+today()+".csv", csv, "text/csv");
+}
+async function loadSample(){
+  var S2 = [
+    {folder:"WD", title:"WD condition 3 — side setback against drainage reserve", body:"Written Direction asks us to confirm the 3m side setback is measured from the drainage reserve line, not the boundary.", para:"project", project:"22 JSB", type:"condition", source:"authority", action:"condition", next:"resolve", due:dayOffset(5), fields:{authority:"URA", reference:"WD-03 (sample)", requirement:"Confirm side setback measured from drainage reserve line."}, sourceRef:"\\\\NAS\\Projects\\22 JSB\\WD\\WD-03.pdf", tags:["setback","CORENET"], distilled:"Get the surveyor to confirm the reserve line before fixing the side envelope.", c:3},
+    {title:"Stair changed from RC to steel", body:"Client wants a lighter look; structural engineer agreed the steel stringer works with the existing slab opening.", para:"project", project:"22 JSB", type:"decision", source:"client", action:"decision", next:"keep", fields:{what:"Stair from RC to steel stringer with timber treads", date:dayOffset(-3), approvedBy:"Client, with structural engineer", why:"Lighter look; no change to slab opening"}, tags:["stair","design change"], distilled:"Steel stair approved — lighter look, same opening. Check fire rating of treads.", c:3},
+    {title:"Client prefers warm minimalism", body:"Across three meetings the client keeps returning to oak, lime plaster and matte finishes. No gloss.", para:"project", project:"22 JSB", type:"client", source:"client", action:"clientpref", next:"keep", fields:{client:"Owner of 22 JSB", likes:"Oak, lime plaster, matte, deep shade", dislikes:"Gloss, grey tiles", evidence:"Design meetings 1–3"}, tags:["brief","materials"], distilled:"Warm minimalism is the palette north star: oak, lime plaster, matte.", c:20},
+    {title:"MEP raised a riser clash at Level 2", body:"Raised by the MEP engineer during the Wan Lee coordination meeting: riser at gridline C clashes with the new beam.", para:"project", project:"19 Wan Lee Road", type:"note", source:"consultant", action:"flag", next:"resolve", due:dayOffset(-2), tags:["MEP","coordination"], c:6},
+    {folder:"Details", title:"Planter waterproofing upturn — 150mm above soil", body:"Contractor's upturn detail at the Dunbar Walk planter was cleaner than our standard 100mm.", para:"resource", type:"lesson", source:"site", action:"lesson", next:"keep", fields:{happened:"Standard 100mm upturn led to seepage on a past job", nextTime:"Upturn 150mm above soil with a turned-down flashing", appliesTo:"All planter boxes on slabs"}, tags:["waterproofing","planter","detailing"], distilled:"Planter upturn 150mm above soil level, with turned-down flashing.", c:30},
+    {folder:"Products", title:"Liquid membrane — failed after two years", body:"Membrane on the Wan Lee roof terrace blistered after two years in full sun.", para:"resource", type:"product", source:"supplier", action:"file", next:"keep", fields:{product:"Liquid-applied membrane (sample)", usedOn:"19 Wan Lee Road roof terrace", performance:"Blistered after ~2 years in full sun"}, tags:["waterproofing","products"], c:40},
+    {title:"Façade mock-up approved", body:"Timber screen mock-up approved on site.", para:"project", project:"Dunbar Walk 36A", type:"decision", source:"client", action:"decision", next:"keep", fields:{what:"Approved 18mm batten gap", approvedBy:"Client"}, tags:["facade","timber"], distilled:"18mm batten gap is the privacy/airflow sweet spot.", c:75},
+    {title:"Mass timber in Singapore — worth a read", url:"https://www.example.com/mass-timber-singapore", body:"", para:"inbox", kind:"link", c:2},
+    {title:"Contractor chasing Payment Cert No. 4", body:"Phone call this morning — they want the certificate issued by Friday.", para:"inbox", c:0},
+    {folder:"Regulations", title:"Sample: authority circular on rooftop structures", body:"New guidance on rooftop structures (sample note — replace with a real circular).", para:"area", type:"regulation", source:"authority", action:"file", next:"decide", fields:{authority:"(sample)", meaning:"Check active projects with roof terraces", affects:"22 JSB, 19 Wan Lee Road"}, tags:["regulation"], c:9}
+  ];
+  for(var i=0;i<S2.length;i++){
+    var s=S2[i], c=s.c; delete s.c;
+    s.tags=(s.tags||[]).concat(["sample"]);
+    var n=normalize(s); n.created=isoDaysAgo(c+1); n.updated=isoDaysAgo(c);
+    if(n.kind==="note" && n.url) n.kind="link";
+    await Engine.create(n, true);
+  }
+  closeModal(); render(); toast("Sample notes added — try the Inbox and Brief me.");
+}
+
+async function clearSample(){
+  var ns = Engine.notes.filter(function(n){ return n.tags.indexOf("sample")>=0; });
+  if(!ns.length){ toast("No sample notes to remove."); return; }
+  if(!confirm("Remove the "+ns.length+" sample notes? Your own notes are not touched.")) return;
+  for(var i=0;i<ns.length;i++) await Engine.remove(ns[i].id);
+  render(); toast("Sample notes removed.");
+}
+
+/* ---------- pilot: registration + usage COUNTS (never note content) ---------- */
+var CFG = window.ATELIER_CONFIG || {};
+var APP_VERSION = CFG.appVersion || "1.1.0";
+var TQ_KEY = "atelier.pilot.queue", ACTIVE_KEY = "atelier.pilot.lastActive";
+function pilot(){ return Engine.meta.pilot || null; }
+function pilotOn(){ return !!CFG.endpoint && !inFrame(); }
+function isRegistered(){ var p=pilot(); return !!(p && p.testerId); }
+function postTracker(payload, keepalive){
+  return fetch(CFG.endpoint, {method:"POST", body:JSON.stringify(payload), keepalive:!!keepalive, redirect:"follow"}).then(function(r){ return r.json(); });
+}
+function readQ(){ try{ return JSON.parse(localStorage.getItem(TQ_KEY)||"[]"); }catch(e){ return []; } }
+function writeQ(q){ try{ localStorage.setItem(TQ_KEY, JSON.stringify(q)); }catch(e){} }
+var flushTimer = null, flushing = false;
+function track(event, detail){
+  if(!pilotOn() || !isRegistered()) return;
+  var q = readQ(); q.push({t:nowISO(), e:event, d:detail||{}});
+  if(q.length > 500) q = q.slice(-500);
+  writeQ(q); clearTimeout(flushTimer); flushTimer = setTimeout(flushQ, 8000);
+}
+async function flushQ(keepalive){
+  if(flushing || !pilotOn() || !isRegistered() || !navigator.onLine) return;
+  var q = readQ(); if(!q.length) return;
+  flushing = true;
+  var batch = q.slice(0, 100);
+  try{
+    var r = await postTracker({op:"events", testerId:pilot().testerId, platform:platform(), version:APP_VERSION, events:batch}, keepalive);
+    if(r && r.ok){ writeQ(readQ().slice(batch.length)); if(readQ().length){ clearTimeout(flushTimer); flushTimer = setTimeout(flushQ, 2000); } }
+  }catch(e){ /* stays queued; retried later */ }
+  flushing = false;
+}
+document.addEventListener("visibilitychange", function(){ if(document.visibilityState==="hidden") flushQ(true); });
+window.addEventListener("online", function(){ flushQ(); });
+function dailyActive(){
+  var d = today(), last = "";
+  try{ last = localStorage.getItem(ACTIVE_KEY) || ""; }catch(e){}
+  if(last !== d){ track("active", {}); try{ localStorage.setItem(ACTIVE_KEY, d); }catch(e){} }
+}
+function updatePilotMenu(){
+  var c=$("#m-checkin"), s=$("#m-shared");
+  if(c) c.hidden = !(pilotOn() && isRegistered());
+  if(s) s.hidden = !pilotOn();
+}
+function gateShown(){ var g=$("#gate"); return !!(g && !g.hidden); }
+function showGate(){
+  var g=$("#gate"); g.hidden=false; document.body.style.overflow="hidden";
+  var inv=""; try{ inv = new URLSearchParams(location.search).get("invite") || ""; }catch(e){}
+  if(inv) $("#reg-invite").value = inv;
+  var pr = profile();
+  if(pr.name && !$("#reg-name").value) $("#reg-name").value = pr.name;
+  if(pr.firm && !$("#reg-firm").value) $("#reg-firm").value = pr.firm;
+  setTimeout(function(){ var f=$("#reg-name"); if(f && !f.value) f.focus(); }, 60);
+}
+function regError(msg){ var el=$("#reg-err"); el.textContent=msg; el.hidden=!msg; }
+async function submitRegistration(e){
+  e.preventDefault(); regError("");
+  var f = {name:$("#reg-name").value.trim(), email:$("#reg-email").value.trim(), firm:$("#reg-firm").value.trim(),
+           role:$("#reg-role").value.trim(), size:$("#reg-size").value, invite:$("#reg-invite").value.trim()};
+  if(!f.name){ regError("Add your name."); $("#reg-name").focus(); return; }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email)){ regError("Add a valid email address."); $("#reg-email").focus(); return; }
+  if(!f.firm){ regError("Add your firm's name."); $("#reg-firm").focus(); return; }
+  if(!f.invite){ regError("Add the invite code from your invitation."); $("#reg-invite").focus(); return; }
+  if(!$("#reg-consent").checked){ regError("Tick the box to agree to share registration details and usage counts."); return; }
+  if(!navigator.onLine){ regError("You're offline. Registering needs an internet connection once; after that Atelier works offline."); return; }
+  var btn=$("#reg-submit"); btn.disabled=true; btn.textContent="Registering…";
+  var r=null;
+  try{ r = await postTracker(Object.assign({op:"register", consent:true, platform:platform(), version:APP_VERSION}, f)); }
+  catch(err){ r=null; }
+  btn.disabled=false; btn.textContent="Register and start";
+  if(!r){ regError("Couldn't reach the pilot server. Check your connection and try again."); return; }
+  if(!r.ok){ regError(r.message || "Registration didn't go through. Check your details and try again."); return; }
+  await Engine.setMeta("pilot", {testerId:r.testerId, email:f.email.toLowerCase(), registeredAt:nowISO(), returning:!!r.returning});
+  await Engine.setMeta("profile", Object.assign({}, profile(), {name:f.name, firm:f.firm, role:f.role}));
+  $("#gate").hidden=true; document.body.style.overflow="";
+  try{ if(location.search) history.replaceState(null, "", location.pathname + location.hash); }catch(err){}
+  updatePilotMenu(); render();
+  try{ localStorage.setItem(ACTIVE_KEY, today()); }catch(err){}
+  track("active", {first:true}); flushQ();
+  toast(r.returning ? "Welcome back, "+f.name+"." : "You're registered. Welcome, "+f.name+".");
+  if(!Engine.meta.seenWelcome) openAbout();
+}
+function initPilot(){
+  $("#reg-form").addEventListener("submit", function(e){ submitRegistration(e).catch(function(){ regError("Something went wrong. Try again."); }); });
+  updatePilotMenu();
+  if(pilotOn() && !isRegistered()){ showGate(); return; }
+  if(pilotOn()){ dailyActive(); flushQ(); }
+}
+function openCheckin(){
+  var where = ["Fee proposal","Client meeting","QP sign-off or review","On site","Design work","Other"];
+  openModal(head("Pilot check-in", "about 20 seconds") + '<div class="modal-body">' +
+    '<div class="field"><span class="lbl">Did Atelier help with real work this week?</span>'+segHTML("ci-helped", [{v:"yes",label:"Yes, it helped"},{v:"no",label:"Not yet"}], "")+'</div>' +
+    '<div class="field"><span class="lbl">Where did you use it? <span class="note">— tick any</span></span><div class="checks">' +
+      where.map(function(w,i){ return '<label class="check"><input type="checkbox" id="ci-w'+i+'" value="'+esc(w)+'"> '+esc(w)+'</label>'; }).join("") + '</div></div>' +
+    '<div class="field"><label for="ci-comment">Anything to tell the team? <span class="note">— optional</span></label><textarea id="ci-comment" placeholder="What helped, what got in the way, what you wished it did."></textarea></div>' +
+    '<p class="suggest" style="margin:0">Your answers go to the pilot team. Notes are never sent.</p></div>' +
+    '<div class="modal-foot"><span class="spacer"></span><button class="btn" data-close>Skip</button><button class="btn primary" data-act="send-checkin">Send</button></div>', "narrow");
+  $$("#ci-helped button").forEach(function(b){ b.addEventListener("click", function(){ setSeg("ci-helped", b.getAttribute("data-v")); }); });
+}
+function sendCheckin(){
+  var h = segVal("ci-helped");
+  if(!h){ toast("Choose Yes or Not yet."); return; }
+  var where = $$('.modal .checks input:checked').map(function(c){ return c.value; });
+  track("feedback", {helped: h==="yes", where: where, comment: ($("#ci-comment").value||"").trim().slice(0,500)});
+  flushQ(); closeModal(); toast("Thanks. That helps decide what Atelier does next.");
+}
+function openShared(){
+  var status;
+  if(!pilotOn()) status = "This copy of Atelier isn't connected to a pilot tracker, so nothing is sent.";
+  else if(!isRegistered()) status = "Nothing is sent until you register.";
+  else { var n=readQ().length; status = "Registered as "+pilot().testerId+". "+(n ? n+" action"+(n>1?"s":"")+" waiting to send." : "Everything is up to date."); }
+  openModal(head("What's shared with the pilot team") + '<div class="modal-body prose">' +
+    '<h3 style="margin-top:0">Sent when you register</h3><ul><li>Your name, email, firm, role and firm size.</li><li>The kind of device (e.g. iPhone, Android, Windows).</li></ul>' +
+    '<h3>Sent while you use Atelier: counts only</h3><ul><li>That you opened Atelier that day.</li><li>That you captured something, and its kind (note, photo, recording, file).</li><li>That you sorted, distilled, used Brief me, finished a weekly review or marked something done, with the shelf, source type and next step you picked.</li><li>How long a recording was.</li></ul>' +
+    '<h3>Sent only when you choose</h3><ul><li>Action requests you type under "Other — request an action".</li><li>Your pilot check-in answers.</li></ul>' +
+    '<h3>Never sent</h3><ul><li>Your notes, titles, tags or key points.</li><li>Project names, links or source records.</li><li>Photos, recordings, videos or files.</li></ul>' +
+    '<p class="suggest" style="margin-top:12px">'+esc(status)+'</p></div>' +
+    '<div class="modal-foot"><span class="spacer"></span><button class="btn primary" data-close>OK</button></div>', "narrow");
+}
+
+/* ---------- the user's name (no account: kept on this device / in the folder) ---------- */
+function profile(){ return Engine.meta.profile || {}; }
+function greeting(){ var h=new Date().getHours(); return h<12 ? "Good morning" : (h<18 ? "Good afternoon" : "Good evening"); }
+function nameFieldsHTML(pr){
+  pr = pr || {};
+  return '<div class="two"><div class="field"><label for="p-name">Your name</label><input id="p-name" type="text" autocomplete="name" value="'+esc(pr.name||"")+'" placeholder="As you\'d like to be greeted"></div>' +
+    '<div class="field"><label for="p-firm">Firm <span class="note">— optional</span></label><input id="p-firm" type="text" autocomplete="organization" value="'+esc(pr.firm||"")+'" placeholder="Your practice"></div></div>' +
+    '<div class="field"><label for="p-role">Role <span class="note">— optional</span></label><input id="p-role" type="text" autocomplete="organization-title" value="'+esc(pr.role||"")+'" placeholder="e.g. Principal, Project architect"></div>';
+}
+async function storeNameFields(){
+  var n=$("#p-name"); if(!n) return false;
+  var pr = {name:n.value.trim().slice(0,60), firm:($("#p-firm").value||"").trim().slice(0,80), role:($("#p-role").value||"").trim().slice(0,60)};
+  if(!pr.name && !profile().name) return false;
+  await Engine.setMeta("profile", pr);
+  return true;
+}
+function openProfile(){
+  openModal(head("My name & firm") + '<div class="modal-body">' + nameFieldsHTML(profile()) +
+    '<p class="suggest">Used to greet you and to show whose Atelier this is. There is no account — it\'s kept on this device, or in your Atelier folder if you use one.</p></div>' +
+    '<div class="modal-foot"><span class="spacer"></span><button class="btn" data-close>Cancel</button><button class="btn primary" data-act="save-profile">Save</button></div>', "narrow");
+  setTimeout(function(){ var n=$("#p-name"); if(n) n.focus(); }, 40);
+}
+async function saveProfile(){
+  if(!$("#p-name").value.trim()){ toast("Add your name first."); $("#p-name").focus(); return; }
+  await storeNameFields(); closeModal(); render(); toast("Thanks, "+profile().name+".");
+}
+
+/* ---------- installable app (PWA) ---------- */
+var installPrompt = null;
+function isStandalone(){ return (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || window.navigator.standalone === true; }
+function inFrame(){ try{ return window.self !== window.top; }catch(e){ return true; } }
+function platform(){
+  var ua = navigator.userAgent || "";
+  if(/iPad|iPhone|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) return "ios";
+  if(/Android/.test(ua)) return "android";
+  if(/Edg\//.test(ua)) return "edge";
+  if(/Chrome\//.test(ua)) return "chrome";
+  if(/Safari\//.test(ua) && /Macintosh/.test(ua)) return "mac-safari";
+  return "other";
+}
+window.addEventListener("beforeinstallprompt", function(e){ e.preventDefault(); installPrompt = e; });
+window.addEventListener("appinstalled", function(){ installPrompt = null; track("install", {}); toast("Atelier is installed. Open it from your Home Screen or app list."); updateInstallItem(); });
+function updateInstallItem(){ var m=$("#m-install"); if(m) m.hidden = isStandalone(); }
+async function installNow(){
+  if(!installPrompt){ return; }
+  installPrompt.prompt();
+  try{ var r = await installPrompt.userChoice; if(r && r.outcome==="accepted") closeModal(); }catch(e){}
+  installPrompt = null;
+}
+function openInstall(){
+  var pf = platform(), body;
+  if(inFrame()){
+    body = '<p class="lead" style="font-size:18px">Install from the hosted version.</p><p>This preview runs inside another page, so it can\'t be installed. Open Atelier at its own web address (for example your GitHub Pages link) and choose <b>Install as an app</b> there.</p>';
+  } else if(location.protocol!=="https:" && !/^(localhost|127\.0\.0\.1)$/.test(location.hostname)){
+    body = '<p class="lead" style="font-size:18px">This address isn\'t secure (HTTPS).</p><p>Browsers only install apps, work offline and allow the microphone on an HTTPS address. GitHub Pages is HTTPS already. On an office server, add HTTPS — for example with Tailscale\'s built-in certificates.</p>';
+  } else if(installPrompt){
+    body = '<p class="lead" style="font-size:18px">Add Atelier to this device.</p><p>It gets its own icon, opens full screen, and works with poor or no signal. Your notes stay on this device.</p>';
+  } else if(pf==="ios"){
+    body = '<p class="lead" style="font-size:18px">On iPhone or iPad</p><ol class="steps"><li>Open this page in <b>Safari</b>.</li><li>Tap the <b>Share</b> button (the square with an arrow).</li><li>Scroll down and tap <b>Add to Home Screen</b>, then <b>Add</b>.</li></ol><p><b>Important:</b> Safari may clear a website\'s data if it isn\'t opened for about a week. Notes in the Home Screen app are kept — so add it, and still export a backup now and then.</p>';
+  } else if(pf==="android"){
+    body = '<p class="lead" style="font-size:18px">On Android</p><ol class="steps"><li>Open this page in <b>Chrome</b>.</li><li>Tap the <b>⋮</b> menu at the top right.</li><li>Tap <b>Install app</b> (or <b>Add to Home screen</b>), then confirm.</li></ol>';
+  } else if(pf==="chrome" || pf==="edge"){
+    body = '<p class="lead" style="font-size:18px">On your computer</p><ol class="steps"><li>Click the <b>install</b> icon at the right end of the address bar,</li><li>or open the browser menu and choose <b>Install Work Lab Atelier</b> (Edge: <b>Apps → Install this site as an app</b>).</li></ol><p>Desktop Chrome and Edge can also keep your notes in a folder you own — see <b>Where my notes are stored</b>.</p>';
+  } else if(pf==="mac-safari"){
+    body = '<p class="lead" style="font-size:18px">On a Mac with Safari</p><ol class="steps"><li>Choose <b>File → Add to Dock</b>.</li></ol><p>For a folder you own as the single source of truth, use Chrome or Edge instead.</p>';
+  } else {
+    body = '<p class="lead" style="font-size:18px">Install as an app</p><p>Use Chrome or Edge on a computer or Android phone, or Safari on iPhone and iPad, and look for <b>Install app</b> or <b>Add to Home Screen</b>.</p>';
+  }
+  openModal(head("Install as an app") + '<div class="modal-body prose">'+body+'</div><div class="modal-foot"><span class="spacer"></span>' +
+    (installPrompt && !inFrame() ? '<button class="btn" data-close>Not now</button><button class="btn primary" data-act="install-now">Install</button>' : '<button class="btn primary" data-close>OK</button>') + '</div>', "narrow");
+}
+function registerAppShell(){
+  if(!("serviceWorker" in navigator) || inFrame()) return;
+  if(location.protocol!=="https:" && !/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) return;
+  navigator.serviceWorker.register("sw.js").catch(function(){});
+}
+async function keepNotesSafe(){
+  try{ if(navigator.storage && navigator.storage.persist && !(await navigator.storage.persisted())) await navigator.storage.persist(); }catch(e){}
+}
+window.addEventListener("offline", function(){ toast("You're offline — Atelier keeps working. Notes are saved on this device.", 3500); });
+window.addEventListener("online", function(){ toast("Back online."); });
+
+/* ---------- theme ---------- */
+function applyTheme(t){
+  var dk = t==="dark" || (t==="auto" && window.matchMedia && window.matchMedia("(prefers-color-scheme:dark)").matches);
+  var tc = document.querySelector('meta[name="theme-color"]'); if(tc) tc.setAttribute("content", dk ? "#141619" : "#F4F5F2");
+  document.documentElement.setAttribute("data-theme",t);
+  try{ localStorage.setItem("atelier.theme",t); }catch(e){}
+  var dark = t==="dark" || (t==="auto" && window.matchMedia && window.matchMedia("(prefers-color-scheme:dark)").matches);
+  $("#theme-label").textContent = dark ? "Light mode" : "Dark mode";
+}
+function toggleTheme(){ var cur=document.documentElement.getAttribute("data-theme")||"auto"; var dark = cur==="dark" || (cur==="auto" && window.matchMedia("(prefers-color-scheme:dark)").matches); applyTheme(dark?"light":"dark"); }
+
+/* ---------- nav drawer (mobile) ---------- */
+function openNav(){ $("#nav").classList.add("open"); $("#scrim-nav").classList.add("open"); }
+function closeNav(){ $("#nav").classList.remove("open"); $("#scrim-nav").classList.remove("open"); }
+
+/* =====================================================================
+   EVENT WIRING — one delegated handler.
+   ===================================================================== */
+async function onClick(e){
+  var t=e.target;
+  var close=t.closest("[data-close]"); if(close){ closeModal(); return; }
+  var menuBtn=t.closest("[data-menu]");
+  if(menuBtn){
+    e.preventDefault(); $("#menu-pop").classList.remove("open");
+    var k=menuBtn.getAttribute("data-menu");
+    if(k==="about") return openAbout();
+    if(k==="roadmap") return openRoadmap();
+    if(k==="profile") return openProfile();
+    if(k==="checkin") return openCheckin();
+    if(k==="shared") return openShared();
+    if(k==="install") return openInstall();
+    if(k==="storage") return openStorage();
+    if(k==="calendar") return calendarFile();
+    if(k==="requests") return openRequests();
+    if(k==="export") return exportBackup();
+    if(k==="import") return $("#pick-import").click();
+    if(k==="sample") return loadSample();
+    if(k==="clear-sample") return clearSample();
+    if(k==="theme") return toggleTheme();
+    return;
+  }
+  var cap=t.closest("[data-cap]"); if(cap){ if($("#scrim").classList.contains("open") && !t.closest(".modal")) return; if(t.closest(".modal")) closeModal(); capture(cap.getAttribute("data-cap")); return; }
+  var gob=t.closest("[data-go]"); if(gob){ go(gob.getAttribute("data-go")); return; }
+  var pj=t.closest("[data-proj]");
+  if(pj && !t.closest("[data-act]")){ S.view="lib"; S.para="all"; S.tag=""; S.folder=""; S.project=pj.getAttribute("data-proj"); closeNav(); render(); return; }
+  var fd=t.closest("[data-folder]"); if(fd){ S.folder=fd.getAttribute("data-folder"); render(); return; }
+  var tg=t.closest("[data-tag]"); if(tg){ var tag=tg.getAttribute("data-tag"); S.view="lib"; S.para="all"; S.project=""; S.folder=""; S.tag = S.tag===tag?"":tag; closeNav(); render(); return; }
+  var done=t.closest("[data-done]");
+  if(done){ e.stopPropagation(); var dn=Engine.get(done.getAttribute("data-done")); if(dn){ await Engine.save(Object.assign({},dn,{done:true})); track("done", {next:dn.next}); render(); toast("Marked done."); } return; }
+  var seek=t.closest("[data-seek]");
+  if(seek){ var el=$('[data-media="'+seek.getAttribute("data-mi")+'"]', $("#modal")); if(el){ el.currentTime=+seek.getAttribute("data-seek"); el.play().catch(function(){}); } return; }
+  var act=t.closest("[data-act]");
+  if(act){
+    var a=act.getAttribute("data-act"), id=act.getAttribute("data-id");
+    if(a==="save") return saveEditor();
+    if(a==="delete"){ if(E && confirm("Delete this note and its attachments? This can't be undone.")){ await Engine.remove(E.id); closeModal(); render(); toast("Deleted."); } return; }
+    if(a==="sort"){ var sn=Engine.get(id); if(sn) openEditor(sn,false); return; }
+    if(a==="move"){ var mv=Engine.get(id); if(!mv) return; var p=act.getAttribute("data-para"); await Engine.save(Object.assign({},mv,{para:p})); track("sort", {shelf:p, quick:true}); render(); toast("Moved to "+PARA[p].one+". Open it to set the source and next step."); return; }
+    if(a==="brief"){ track("brief", {}); S.briefCode=$("#prep-proj").value; S.view="brief"; render(); window.scrollTo(0,0); return; }
+    if(a==="brief-this"){ track("brief", {}); S.briefCode=S.project; S.project=""; S.view="brief"; render(); window.scrollTo(0,0); return; }
+    if(a==="print"){ try{ window.print(); }catch(err){ toast("Printing isn't available in this view."); } return; }
+    if(a==="archive-proj"){ var code=act.getAttribute("data-proj"); if(!confirm("Move all notes for “"+code+"” to the Archive?")) return; var ns=Engine.notes.filter(function(n){ return n.project===code && n.para!=="archive"; }); for(var i=0;i<ns.length;i++) await Engine.save(Object.assign({},ns[i],{para:"archive"})); render(); toast(code+" archived — still searchable."); return; }
+    if(a==="finish-review"){ await Engine.setMeta("lastReview", nowISO()); track("review", {}); go("home"); if(pilotOn() && isRegistered()) openCheckin(); else toast("Review done. See you next week."); return; }
+    if(a==="start"){ closeModal(); capture("note"); return; }
+    if(a==="save-profile") return saveProfile();
+    if(a==="send-checkin") return sendCheckin();
+    if(a==="install-now") return installNow();
+    if(a==="connect") return connectFolder();
+    if(a==="disconnect") return disconnectFolder();
+    if(a==="export-requests") return exportRequests();
+    if(a==="open-att"){ var u=await Engine.blobURL(act.getAttribute("data-path")); if(u) window.open(u,"_blank"); return; }
+    if(a==="stamp"){ var me=$('[data-media="'+act.getAttribute("data-mi")+'"]', $("#modal")); var ta=$("#e-body"); if(me && ta){ var ins="["+fmtClock(me.currentTime||0)+"] "; var p0=ta.selectionStart||ta.value.length; ta.value=ta.value.slice(0,p0)+(p0&&ta.value[p0-1]!=="\n"?"\n":"")+ins+ta.value.slice(p0); ta.focus(); } return; }
+    return;
+  }
+  var open=t.closest("[data-open]");
+  if(open && !t.closest("[data-stop]")){ var on=Engine.get(open.getAttribute("data-open")); if(on) openEditor(on,false); return; }
+}
+
+function wire(){
+  document.addEventListener("click", function(e){ onClick(e).catch(function(err){ console.error(err); toast("Something went wrong: "+(err&&err.message||err)); }); });
+  $("#capture-btn").addEventListener("click", function(){ openModal(head("Capture","everything goes to your Inbox") + '<div class="modal-body">'+quickHTML()+'<p class="suggest">Tip: paste a screenshot with Ctrl/Cmd + V, or drag files onto the page.</p></div>', "narrow"); });
+  $("#brand").addEventListener("click", function(){ go("home"); });
+  $("#nav-toggle").addEventListener("click", openNav);
+  $("#scrim-nav").addEventListener("click", closeNav);
+  $("#scrim").addEventListener("click", function(e){ if(e.target===$("#scrim")) closeModal(); });
+  $("#store-pill").addEventListener("click", openStorage);
+  $("#reconnect-btn").addEventListener("click", reconnectFolder);
+  var mb=$("#menu-btn"), mp=$("#menu-pop");
+  mb.addEventListener("click", function(e){ e.stopPropagation(); mp.classList.toggle("open"); });
+  document.addEventListener("click", function(e){ if(!e.target.closest(".menu")) mp.classList.remove("open"); });
+  $("#search").addEventListener("input", function(e){ S.q=e.target.value; if(S.q){ if(S.view!=="lib"){ S.view="lib"; S.para="all"; S.project=""; S.tag=""; } } render(); });
+  document.addEventListener("change", function(e){
+    if(e.target.id==="sort"){ S.sort=e.target.value; render(); }
+    if(e.target.id==="brief-proj"){ S.briefCode=e.target.value; render(); }
+    if(e.target.id==="pick-image"||e.target.id==="pick-video"||e.target.id==="pick-file"){ var fs=e.target.files; closeModal(); ingestFiles(fs); e.target.value=""; }
+    if(e.target.id==="pick-import"){ if(e.target.files[0]) importBackup(e.target.files[0]); e.target.value=""; }
+  });
+  document.addEventListener("paste", function(e){
+    if($("#scrim").classList.contains("open") && !$(".modal .quick", document)) { /* allow paste inside open editor fields */ if(e.target.closest && e.target.closest("input,textarea")) return; }
+    var files = e.clipboardData && e.clipboardData.files;
+    if(files && files.length){ e.preventDefault(); closeModal(); ingestFiles(files, "Screenshot"); return; }
+    if(e.target.closest && e.target.closest("input,textarea")) return;
+    var txt = e.clipboardData && e.clipboardData.getData("text");
+    if(txt && /^https?:\/\/\S+$/.test(txt.trim())){ e.preventDefault(); openEditor(newNote({kind:"link", url:txt.trim(), next:"explore"}), true); }
+  });
+  var depth=0, drop=$("#drop");
+  document.addEventListener("dragenter", function(e){ if(e.dataTransfer && Array.prototype.indexOf.call(e.dataTransfer.types||[],"Files")>=0){ depth++; drop.classList.add("on"); } });
+  document.addEventListener("dragleave", function(){ depth=Math.max(0,depth-1); if(!depth) drop.classList.remove("on"); });
+  document.addEventListener("dragover", function(e){ e.preventDefault(); });
+  document.addEventListener("drop", function(e){ e.preventDefault(); depth=0; drop.classList.remove("on"); if(e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length){ closeModal(); ingestFiles(e.dataTransfer.files); } });
+  document.addEventListener("keydown", function(e){
+    if(e.key==="Escape"){ if($("#scrim").classList.contains("open")) closeModal(); $("#menu-pop").classList.remove("open"); closeNav(); return; }
+    var typing=/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName||"");
+    if((e.metaKey||e.ctrlKey) && e.key==="Enter" && $("#e-title")){ e.preventDefault(); saveEditor(); return; }
+    if(typing || $("#scrim").classList.contains("open") || gateShown()) return;
+    if(e.key==="/"){ e.preventDefault(); $("#search").focus(); }
+    else if(e.key==="n"||e.key==="N"){ e.preventDefault(); capture("note"); }
+    else if(e.key==="i"||e.key==="I"){ e.preventDefault(); go("inbox"); }
+  });
+  document.addEventListener("keydown", function(e){ if((e.key==="Enter"||e.key===" ") && e.target.matches && e.target.matches("article.card")){ e.preventDefault(); var n=Engine.get(e.target.getAttribute("data-open")); if(n) openEditor(n,false); } });
+}
+
+/* =====================================================================
+   BOOT
+   ===================================================================== */
+async function boot(){
+  /* Dark by default; the user's own choice (⋯ menu) is remembered and wins. */
+  try{ applyTheme(localStorage.getItem("atelier.theme")||"dark"); }catch(e){ applyTheme("dark"); }
+  wire();
+  try{ idbHandle = await idbOpen(); browserAdapter = new BrowserAdapter(idbHandle); Engine.adapter = browserAdapter; }
+  catch(e){ Engine.adapter = new MemoryAdapter(); }
+  if(idbHandle){
+    try{
+      var h = await idbDo(idbHandle,"kv","readonly",function(s){ return s.get("folderHandle"); });
+      if(h && h.queryPermission){
+        var p = await h.queryPermission({mode:"readwrite"});
+        if(p==="granted"){ var fa=new FolderAdapter(h); await fa.init(); Engine.adapter=fa; }
+        else { $("#reconnect").hidden=false; }
+      }
+    }catch(e){}
+  }
+  try{ await Engine.load(); }catch(e){ Engine.notes=[]; Engine.meta={}; }
+  registerAppShell(); keepNotesSafe(); updateInstallItem(); initPilot();
+  render();
+  if(!gateShown() && !Engine.meta.seenWelcome && !Engine.notes.length) openAbout();
+}
+boot();
+})();
+</script>
+</body>
+</html>
