@@ -1,8 +1,7 @@
 /* Work Lab Atelier: pilot configuration.
-   Paste the Web app URL from your Google Apps Script deployment between the quotes
-   (see tracker/SETUP.md). Leave it empty to run Atelier without registration or
-   tracking, for example while you test it yourself. */
+   Paste the Web app URL between the quotes. Leave it empty to run without
+   registration or tracking. After changing this, bump VERSION in sw.js. */
 window.ATELIER_CONFIG = {
-  endpoint: "",
+  endpoint: "https://script.google.com/macros/s/AKfycbxBaXbCPi259XiZQHt3DsjYkjR4Ne-fWCb8l4ntqyEduqDX4FgZJRKEZNO26w5TUXc/exec",
   appVersion: "1.1.0"
 };
